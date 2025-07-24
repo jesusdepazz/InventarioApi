@@ -47,8 +47,8 @@ namespace InventoryApi.Controllers
                         .Where(a => a.CodificacionEquipo == e.Codificacion)
                         .Select(a => a.NombreEmpleado)
                         .ToList()
-                    })
-                    .ToListAsync();
+                        })
+    .                   ToListAsync();
 
             return Ok(equiposConAsignaciones);
         }
