@@ -45,13 +45,18 @@ namespace InventoryApi.Controllers
 
                     Asignaciones = _context.Asignaciones
                         .Where(a => a.CodificacionEquipo == e.Codificacion)
-                        .Select(a => a.NombreEmpleado)
-                        .ToList()
+                        .Select(a => new {
+                            a.CodigoEmpleado,
+                            a.NombreEmpleado,
+                            a.Puesto
                         })
-    .                   ToListAsync();
+                        .ToList()
+                })
+                .ToListAsync();
 
             return Ok(equiposConAsignaciones);
         }
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Equipo>> GetEquipo(int id)
