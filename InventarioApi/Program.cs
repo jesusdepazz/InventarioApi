@@ -1,21 +1,16 @@
 using Inventory.Data;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<InventarioContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
-
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("react", policy =>
+    options.AddPolicy("React", policy =>
     {
-        policy.WithOrigins("http://inventory.guandy.com")
+        policy.WithOrigins("https://inventory.guandy.com")
         .AllowAnyHeader()
         .AllowAnyMethod()
         .AllowCredentials();
@@ -36,15 +31,14 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = "swagger";
 });
 
+
 app.UseHttpsRedirection();
 
-app.UseCors("react");
-
-app.UseAuthentication();
+app.UseCors("React");
 
 app.UseAuthorization();
 
-app.UseStaticFiles();
+app.UseStaticFiles(); 
 
 app.MapControllers();
 
