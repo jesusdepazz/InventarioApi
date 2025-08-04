@@ -45,13 +45,18 @@ namespace InventoryApi.Controllers
 
                     Asignaciones = _context.Asignaciones
                         .Where(a => a.CodificacionEquipo == e.Codificacion)
-                        .Select(a => a.NombreEmpleado)
+                        .Select(a => new {
+                            a.CodigoEmpleado,
+                            a.NombreEmpleado,
+                            a.Puesto
+                        })
                         .ToList()
-                    })
-                    .ToListAsync();
+                })
+                .ToListAsync();
 
             return Ok(equiposConAsignaciones);
         }
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Equipo>> GetEquipo(int id)
@@ -73,8 +78,10 @@ namespace InventoryApi.Controllers
                 .Where(e => e.Codificacion == codificacion)
                 .Select(e => new
                 {
+                    codificacion = e.Codificacion,
                     marca = e.Marca,
                     modelo = e.Modelo,
+                    serie = e.Serie,
                     estado = e.Estado,
                     tipo = e.Tipo,
                     ubicacion = e.Ubicacion
@@ -86,6 +93,7 @@ namespace InventoryApi.Controllers
 
             return Ok(equipo);
         }
+
 
         [HttpPost]
         public async Task<ActionResult<Equipo>> PostEquipo([FromForm] EquipoDTO dto)
@@ -177,9 +185,6 @@ namespace InventoryApi.Controllers
             if (equipo == null)
                 return NotFound("Equipo no encontrado");
 
-            equipo.OrderCompra = dto.OrderCompra;
-            equipo.Factura = dto.Factura;
-            equipo.Proveedor = dto.Proveedor;
             equipo.Tipo = dto.Tipo;
             equipo.Codificacion = dto.Codificacion;
             equipo.Estado = dto.Estado;

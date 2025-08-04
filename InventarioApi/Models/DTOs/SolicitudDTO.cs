@@ -1,8 +1,5 @@
-﻿namespace InventarioApi.Models;
-
-public class Solicitud
+﻿public class SolicitudDTO
 {
-    public int Id { get; set; }
     public string CodigoEmpleado { get; set; }
     public string NombreEmpleado { get; set; }
     public string Puesto { get; set; }
@@ -13,8 +10,5 @@ public class Solicitud
     public string Marca { get; set; }
     public string Modelo { get; set; }
     public string Serie { get; set; }
-    public string Estado { get; set; } = "Pendiente";
     public string TipoSolicitud { get; set; }
-    public string Correlativo { get; set; }
-
 }

@@ -22,7 +22,8 @@ namespace Inventory.Controllers
                 .Include(e => e.DepartamentoInfo)
                 .Where(e => e.Empleado == codigo)
                 .Select(e => new
-                {
+                {   
+                    codigoEmpleado = e.Empleado,
                     nombre = e.Nombre,
                     puesto = e.Puesto,
                     departamento = e.DepartamentoInfo.Descripcion

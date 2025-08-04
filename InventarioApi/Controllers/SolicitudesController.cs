@@ -37,10 +37,10 @@ namespace Inventory.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Solicitud>> PostSolicitud(Solicitud solicitud)
+        public async Task<ActionResult<Solicitud>> PostSolicitud(SolicitudDTO solicitudDto)
         {
             var asignacionesExistentes = await _context.Asignaciones
-                .Where(a => a.CodificacionEquipo == solicitud.CodificacionEquipo)
+                .Where(a => a.CodificacionEquipo == solicitudDto.CodificacionEquipo)
                 .ToListAsync();
 
             if (asignacionesExistentes.Any())
@@ -48,11 +48,44 @@ namespace Inventory.Controllers
                 return BadRequest("Este equipo ya está asignado a otro empleado. Debe desasignarlo antes de crear una solicitud.");
             }
 
+            string ultimoCorrelativo = await _context.Solicitudes
+                .OrderByDescending(s => s.Id)
+                .Select(s => s.Correlativo)
+                .FirstOrDefaultAsync();
+
+            int numero = 1;
+            if (!string.IsNullOrEmpty(ultimoCorrelativo) && ultimoCorrelativo.StartsWith("SOL-"))
+            {
+                var parteNumerica = ultimoCorrelativo.Substring(4);
+                if (int.TryParse(parteNumerica, out int ultimoNumero))
+                {
+                    numero = ultimoNumero + 1;
+                }
+            }
+
+            var solicitud = new Solicitud
+            {
+                CodigoEmpleado = solicitudDto.CodigoEmpleado,
+                NombreEmpleado = solicitudDto.NombreEmpleado,
+                Puesto = solicitudDto.Puesto,
+                Departamento = solicitudDto.Departamento,
+                Ubicacion = solicitudDto.Ubicacion,
+                JefeInmediato = solicitudDto.JefeInmediato,
+                CodificacionEquipo = solicitudDto.CodificacionEquipo,
+                Marca = solicitudDto.Marca,
+                Modelo = solicitudDto.Modelo,
+                Serie = solicitudDto.Serie,
+                TipoSolicitud = solicitudDto.TipoSolicitud,
+                Estado = "Pendiente",
+                Correlativo = $"SOL-{numero.ToString("D5")}"
+            };
+
             _context.Solicitudes.Add(solicitud);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetSolicitud), new { id = solicitud.Id }, solicitud);
         }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSolicitud(int id)

@@ -15,6 +15,7 @@ namespace Inventory.Data
         public DbSet<Asignacion> Asignaciones { get; set; }
         public DbSet<Mantenimiento> Mantenimientos { get; set; }
         public DbSet<Solicitud> Solicitudes { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)     
         {
             base.OnModelCreating(modelBuilder);

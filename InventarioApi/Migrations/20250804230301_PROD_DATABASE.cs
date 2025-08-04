@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace InventarioApi.Migrations
 {
     /// <inheritdoc />
-    public partial class DB_PRUEBA : Migration
+    public partial class PROD_DATABASE : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -92,7 +92,9 @@ namespace InventarioApi.Migrations
                     Marca = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Modelo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Serie = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Estado = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Estado = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TipoSolicitud = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Correlativo = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -110,6 +112,20 @@ namespace InventarioApi.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Ubicaciones", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Usuarios",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Correo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Rol = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Usuarios", x => x.Id);
                 });
         }
 
@@ -131,6 +147,8 @@ namespace InventarioApi.Migrations
             migrationBuilder.DropTable(
                 name: "Ubicaciones");
 
+            migrationBuilder.DropTable(
+                name: "Usuarios");
         }
     }
 }

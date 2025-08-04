@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventarioApi.Migrations
 {
     [DbContext(typeof(InventarioContext))]
-    [Migration("20250804223635_DB_PRUEBA")]
-    partial class DB_PRUEBA
+    [Migration("20250804230301_PROD_DATABASE")]
+    partial class PROD_DATABASE
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -156,6 +156,10 @@ namespace InventarioApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Correlativo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Departamento")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -188,6 +192,10 @@ namespace InventarioApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("TipoSolicitud")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Ubicacion")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -195,6 +203,27 @@ namespace InventarioApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Solicitudes");
+                });
+
+            modelBuilder.Entity("InventarioApi.Models.Usuario", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Correo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Rol")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Usuarios");
                 });
 
             modelBuilder.Entity("Inventory.Models.Ubicacion", b =>
