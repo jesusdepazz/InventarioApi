@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace InventarioApi.Migrations
 {
     /// <inheritdoc />
-    public partial class CrateDatabase : Migration
+    public partial class Initial_Database : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -28,6 +28,7 @@ namespace InventarioApi.Migrations
                 {
                     table.PrimaryKey("PK_Asignaciones", x => x.Id);
                 });
+
 
             migrationBuilder.CreateTable(
                 name: "Equipos",
