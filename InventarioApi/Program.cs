@@ -2,6 +2,7 @@ using Inventory.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,14 +14,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("react", policy =>
+    options.AddPolicy("AppReact", policy =>
     {
         policy.WithOrigins("https://inventoryprb.guandy.com")
-        .AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowCredentials();
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
-
 });
 
 builder.Services.AddControllers();
@@ -37,14 +37,11 @@ app.UseSwaggerUI(c =>
 });
 
 app.UseHttpsRedirection();
-
-app.UseCors("react");
-
-app.UseAuthentication();
-
-app.UseAuthorization();
-
 app.UseStaticFiles();
+app.UseRouting(); 
+app.UseCors("AppReact");
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
