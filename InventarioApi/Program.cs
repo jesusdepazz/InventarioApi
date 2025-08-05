@@ -11,11 +11,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy("React", policy =>
     {
         policy.WithOrigins("https://inventory.guandy.com")
-        .AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowCredentials();
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
-
 });
 
 builder.Services.AddControllers();
@@ -35,6 +34,8 @@ app.UseSwaggerUI(c =>
 app.UseHttpsRedirection();
 
 app.UseCors("React");
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
