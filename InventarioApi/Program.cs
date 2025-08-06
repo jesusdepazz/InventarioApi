@@ -13,13 +13,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("React", policy =>
+    options.AddPolicy("AllowReact", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
+        policy.WithOrigins("https://inventory-test.guandy.com")
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials();
     });
+
 });
 
 builder.Services.AddControllers();
@@ -35,7 +36,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseRouting();
-app.UseCors("AppReact");
+app.UseCors("AllowReact");
 app.UseAuthentication();
 app.UseAuthorization();
 
