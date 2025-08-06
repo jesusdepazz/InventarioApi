@@ -8,7 +8,7 @@ builder.Services.AddDbContext<InventarioContext>(options =>
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("React", policy =>
+    options.AddPolicy("ReactApp", policy =>
     {
         policy.WithOrigins("https://inventory.guandy.com")
               .AllowAnyHeader()
@@ -33,7 +33,7 @@ app.UseSwaggerUI(c =>
 
 app.UseHttpsRedirection();
 
-app.UseCors("React");
+app.UseCors("ReactApp");
 
 app.UseAuthentication();
 
