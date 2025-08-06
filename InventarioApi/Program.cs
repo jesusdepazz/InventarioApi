@@ -13,7 +13,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("react", policy =>
+    options.AddPolicy("AllowReact", policy =>
     {
         policy.WithOrigins("http://localhost:5173")
         .AllowAnyHeader()
@@ -37,7 +37,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors("react");
+app.UseCors("AllowReact");
 
 app.UseAuthentication();
 
