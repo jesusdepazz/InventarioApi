@@ -6,17 +6,22 @@ namespace InventoryApi.Models
     {
         public int Id { get; set; }
 
-        //datos de compra
+        //datos generales
+        public string RegistroDeprec {  get; set; }
         public string OrderCompra {  get; set; }
         public string Factura { get; set; }
         public string Proveedor { get; set; }
+        public DateTime FechaIngreso { get; set; } = DateTime.Now;
+
+        //datos de usuario
+        public string HojaNo {  get; set; }
+        public DateTime FechaActualizacion {  get; set; } = DateTime.Now;
 
         //datos de equipos
-        public string Tipo { get; set; }
 
         [Required]
         public string Codificacion { get; set; }
-        public string Estado { get; set; }
+        public string TipoEquipo {  get; set; }
 
         [Required]
         public string Marca { get; set; }
@@ -29,8 +34,9 @@ namespace InventoryApi.Models
         public string? Extension { get; set; }
         public string Especificaciones { get; set; }
         public string Accesorios { get; set; }
-        public string Ubicacion { get; set; }
+        public string Estado { get; set; }
+        public string Tipo { get; set; }
         public string? ImagenRuta { get; set; }
-        public DateTime FechaIngreso { get; set; } = DateTime.Now;
+        public string Ubicacion { get; set; }
     }
 }

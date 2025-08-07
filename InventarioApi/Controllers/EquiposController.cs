@@ -25,22 +25,25 @@ namespace InventoryApi.Controllers
                 .Select(e => new
                 {
                     e.Id,
+                    e.RegistroDeprec,
                     e.OrderCompra,
                     e.Factura,
                     e.Proveedor,
-                    e.Tipo,
+                    e.FechaIngreso,
+                    e.HojaNo,
+                    e.FechaActualizacion,
                     e.Codificacion,
-                    e.Estado,
                     e.Marca,
                     e.Modelo,
                     e.Serie,
                     e.Imei,
                     e.NumeroAsignado,
                     e.Extension,
+                    e.Estado,
+                    e.Tipo,
                     e.Especificaciones,
                     e.Accesorios,
                     e.Ubicacion,
-                    e.FechaIngreso,
                     e.ImagenRuta,
 
                     Asignaciones = _context.Asignaciones
@@ -137,11 +140,15 @@ namespace InventoryApi.Controllers
 
             var equipo = new Equipo
             {
+                RegistroDeprec = dto.RegistroDeprec,
                 OrderCompra = dto.OrderCompra,
                 Factura = dto.Factura,
                 Proveedor = dto.Proveedor,
-                Tipo = dto.Tipo,
+                FechaIngreso = dto.FechaIngreso,
+                HojaNo = dto.HojaNo,
+                FechaActualizacion = dto.FechaActualizacion,
                 Codificacion = dto.Codificacion,
+                TipoEquipo = dto.TipoEquipo,
                 Estado = dto.Estado,
                 Marca = dto.Marca,
                 Modelo = dto.Modelo,
@@ -151,8 +158,8 @@ namespace InventoryApi.Controllers
                 Extension = dto.Extension,
                 Especificaciones = dto.Especificaciones,
                 Accesorios = dto.Accesorios,
+                Tipo = dto.Tipo,
                 Ubicacion = dto.Ubicacion,
-                FechaIngreso = dto.FechaIngreso,
                 ImagenRuta = rutaImagen
             };
 
