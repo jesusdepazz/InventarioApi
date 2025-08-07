@@ -38,5 +38,14 @@ namespace InventoryApi.Models
         public string Tipo { get; set; }
         public string? ImagenRuta { get; set; }
         public string Ubicacion { get; set; }
+
+        //informacion de toma de inventario
+        public string RevisadoTomaFisica { get; set; }
+        public DateTime FechaToma { get; set; } = DateTime.Now;
+        public string EstadoSticker { get; set; }
+        public string AsignadoHojaResponsabilidad { get; set; }
+        public string Comentarios {  get; set; }
+        public string Observaciones { get; set; }
+
     }
 }

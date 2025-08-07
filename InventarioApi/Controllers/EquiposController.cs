@@ -45,6 +45,12 @@ namespace InventoryApi.Controllers
                     e.Accesorios,
                     e.Ubicacion,
                     e.ImagenRuta,
+                    e.RevisadoTomaFisica,
+                    e.FechaToma,
+                    e.EstadoSticker,
+                    e.AsignadoHojaResponsabilidad,
+                    e.Comentarios,
+                    e.Observaciones,
 
                     Asignaciones = _context.Asignaciones
                         .Where(a => a.CodificacionEquipo == e.Codificacion)
@@ -103,6 +109,7 @@ namespace InventoryApi.Controllers
         {
             var existeDuplicado = await _context.Equipos.AnyAsync(e =>
                 e.OrderCompra == dto.OrderCompra ||
+                e.HojaNo == dto.HojaNo ||
                 e.Factura == dto.Factura ||
                 e.Codificacion == dto.Codificacion ||
                 (!string.IsNullOrEmpty(dto.Serie) && e.Serie == dto.Serie)
@@ -110,6 +117,9 @@ namespace InventoryApi.Controllers
 
             if (await _context.Equipos.AnyAsync(e => e.OrderCompra == dto.OrderCompra))
                 return BadRequest("Ya existe un equipo con la misma Orden de Compra.");
+
+            if (await _context.Equipos.AnyAsync(e => e.HojaNo == dto.HojaNo))
+                return BadRequest("Ya existe un equipo con la misma Hoja No.");
 
             if (await _context.Equipos.AnyAsync(e => e.Factura == dto.Factura))
                 return BadRequest("Ya existe un equipo con la misma Factura.");
@@ -160,7 +170,13 @@ namespace InventoryApi.Controllers
                 Accesorios = dto.Accesorios,
                 Tipo = dto.Tipo,
                 Ubicacion = dto.Ubicacion,
-                ImagenRuta = rutaImagen
+                ImagenRuta = rutaImagen,
+                RevisadoTomaFisica = dto.RevisadoTomaFisica,
+                FechaToma = dto.FechaToma,
+                EstadoSticker = dto.EstadoSticker,
+                AsignadoHojaResponsabilidad = dto.AsignadoHojaResponsabilidad,
+                Comentarios = dto.Comentarios,
+                Observaciones = dto.Observaciones,
             };
 
             _context.Equipos.Add(equipo);

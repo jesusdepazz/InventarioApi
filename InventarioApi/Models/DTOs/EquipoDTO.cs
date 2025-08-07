@@ -21,4 +21,12 @@
     public string Accesorios { get; set; }
     public string Ubicacion { get; set; }
     public IFormFile? Imagen { get; set; }
+
+    //informacion de toma de inventario
+    public string RevisadoTomaFisica { get; set; }
+    public DateTime FechaToma { get; set; } = DateTime.Now;
+    public string EstadoSticker { get; set; }
+    public string AsignadoHojaResponsabilidad { get; set; }
+    public string Comentarios { get; set; }
+    public string Observaciones { get; set; }
 }
