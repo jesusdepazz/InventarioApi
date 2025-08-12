@@ -36,6 +36,7 @@ namespace InventoryApi.Models
         public string Accesorios { get; set; }
         public string Estado { get; set; }
         public string Tipo { get; set; }
+        public string ResponsableAnterior { get; set; }
         public string? ImagenRuta { get; set; }
         public string Ubicacion { get; set; }
 

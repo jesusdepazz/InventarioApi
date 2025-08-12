@@ -32,7 +32,9 @@ namespace InventoryApi.Controllers
                     e.FechaIngreso,
                     e.HojaNo,
                     e.FechaActualizacion,
+                    e.ResponsableAnterior,
                     e.Codificacion,
+                    e.TipoEquipo,
                     e.Marca,
                     e.Modelo,
                     e.Serie,
@@ -108,21 +110,9 @@ namespace InventoryApi.Controllers
         public async Task<ActionResult<Equipo>> PostEquipo([FromForm] EquipoDTO dto)
         {
             var existeDuplicado = await _context.Equipos.AnyAsync(e =>
-                e.OrderCompra == dto.OrderCompra ||
-                e.HojaNo == dto.HojaNo ||
-                e.Factura == dto.Factura ||
                 e.Codificacion == dto.Codificacion ||
                 (!string.IsNullOrEmpty(dto.Serie) && e.Serie == dto.Serie)
             );
-
-            if (await _context.Equipos.AnyAsync(e => e.OrderCompra == dto.OrderCompra))
-                return BadRequest("Ya existe un equipo con la misma Orden de Compra.");
-
-            if (await _context.Equipos.AnyAsync(e => e.HojaNo == dto.HojaNo))
-                return BadRequest("Ya existe un equipo con la misma Hoja No.");
-
-            if (await _context.Equipos.AnyAsync(e => e.Factura == dto.Factura))
-                return BadRequest("Ya existe un equipo con la misma Factura.");
 
             if (await _context.Equipos.AnyAsync(e => e.Codificacion == dto.Codificacion))
                 return BadRequest("Ya existe un equipo con la misma Codificación.");
@@ -157,6 +147,7 @@ namespace InventoryApi.Controllers
                 FechaIngreso = dto.FechaIngreso,
                 HojaNo = dto.HojaNo,
                 FechaActualizacion = dto.FechaActualizacion,
+                ResponsableAnterior = dto.ResponsableAnterior,
                 Codificacion = dto.Codificacion,
                 TipoEquipo = dto.TipoEquipo,
                 Estado = dto.Estado,

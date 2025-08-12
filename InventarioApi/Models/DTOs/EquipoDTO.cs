@@ -1,4 +1,5 @@
-﻿public class EquipoDTO
+﻿
+public class EquipoDTO
 {
     public string RegistroDeprec { get; set; }
     public string OrderCompra { get; set; }
@@ -16,6 +17,7 @@
     public string? NumeroAsignado { get; set; }
     public string? Extension { get; set; }
     public string Tipo { get; set; }
+    public string ResponsableAnterior { get; set; }
     public string Estado { get; set; }
     public string Especificaciones { get; set; }
     public string Accesorios { get; set; }
@@ -30,3 +32,4 @@
     public string Comentarios { get; set; }
     public string Observaciones { get; set; }
 }
+
