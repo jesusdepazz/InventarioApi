@@ -23,7 +23,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("ReactApp", policy =>
+    options.AddPolicy("react", policy =>
     {
         policy.WithOrigins("https://inventory.guandy.com")
               .AllowAnyHeader()
@@ -48,7 +48,7 @@ app.UseSwaggerUI(c =>
 
 app.UseHttpsRedirection();
 
-app.UseCors("ReactApp");
+app.UseCors("react");
 
 app.UseAuthentication();
 

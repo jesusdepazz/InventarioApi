@@ -25,23 +25,34 @@ namespace InventoryApi.Controllers
                 .Select(e => new
                 {
                     e.Id,
+                    e.RegistroDeprec,
                     e.OrderCompra,
                     e.Factura,
                     e.Proveedor,
-                    e.Tipo,
+                    e.FechaIngreso,
+                    e.HojaNo,
+                    e.FechaActualizacion,
+                    e.ResponsableAnterior,
                     e.Codificacion,
-                    e.Estado,
+                    e.TipoEquipo,
                     e.Marca,
                     e.Modelo,
                     e.Serie,
                     e.Imei,
                     e.NumeroAsignado,
                     e.Extension,
+                    e.Estado,
+                    e.Tipo,
                     e.Especificaciones,
                     e.Accesorios,
                     e.Ubicacion,
-                    e.FechaIngreso,
                     e.ImagenRuta,
+                    e.RevisadoTomaFisica,
+                    e.FechaToma,
+                    e.EstadoSticker,
+                    e.AsignadoHojaResponsabilidad,
+                    e.Comentarios,
+                    e.Observaciones,
 
                     Asignaciones = _context.Asignaciones
                         .Where(a => a.CodificacionEquipo == e.Codificacion)
@@ -99,17 +110,9 @@ namespace InventoryApi.Controllers
         public async Task<ActionResult<Equipo>> PostEquipo([FromForm] EquipoDTO dto)
         {
             var existeDuplicado = await _context.Equipos.AnyAsync(e =>
-                e.OrderCompra == dto.OrderCompra ||
-                e.Factura == dto.Factura ||
                 e.Codificacion == dto.Codificacion ||
                 (!string.IsNullOrEmpty(dto.Serie) && e.Serie == dto.Serie)
             );
-
-            if (await _context.Equipos.AnyAsync(e => e.OrderCompra == dto.OrderCompra))
-                return BadRequest("Ya existe un equipo con la misma Orden de Compra.");
-
-            if (await _context.Equipos.AnyAsync(e => e.Factura == dto.Factura))
-                return BadRequest("Ya existe un equipo con la misma Factura.");
 
             if (await _context.Equipos.AnyAsync(e => e.Codificacion == dto.Codificacion))
                 return BadRequest("Ya existe un equipo con la misma Codificación.");
@@ -137,11 +140,16 @@ namespace InventoryApi.Controllers
 
             var equipo = new Equipo
             {
+                RegistroDeprec = dto.RegistroDeprec,
                 OrderCompra = dto.OrderCompra,
                 Factura = dto.Factura,
                 Proveedor = dto.Proveedor,
-                Tipo = dto.Tipo,
+                FechaIngreso = dto.FechaIngreso,
+                HojaNo = dto.HojaNo,
+                FechaActualizacion = dto.FechaActualizacion,
+                ResponsableAnterior = dto.ResponsableAnterior,
                 Codificacion = dto.Codificacion,
+                TipoEquipo = dto.TipoEquipo,
                 Estado = dto.Estado,
                 Marca = dto.Marca,
                 Modelo = dto.Modelo,
@@ -151,9 +159,15 @@ namespace InventoryApi.Controllers
                 Extension = dto.Extension,
                 Especificaciones = dto.Especificaciones,
                 Accesorios = dto.Accesorios,
+                Tipo = dto.Tipo,
                 Ubicacion = dto.Ubicacion,
-                FechaIngreso = dto.FechaIngreso,
-                ImagenRuta = rutaImagen
+                ImagenRuta = rutaImagen,
+                RevisadoTomaFisica = dto.RevisadoTomaFisica,
+                FechaToma = dto.FechaToma,
+                EstadoSticker = dto.EstadoSticker,
+                AsignadoHojaResponsabilidad = dto.AsignadoHojaResponsabilidad,
+                Comentarios = dto.Comentarios,
+                Observaciones = dto.Observaciones,
             };
 
             _context.Equipos.Add(equipo);
@@ -192,8 +206,6 @@ namespace InventoryApi.Controllers
             equipo.Modelo = dto.Modelo;
             equipo.Serie = dto.Serie;
             equipo.Imei = dto.Imei;
-            equipo.NumeroAsignado = dto.NumeroAsignado;
-            equipo.Extension = dto.Extension;
             equipo.Especificaciones = dto.Especificaciones;
             equipo.Accesorios = dto.Accesorios;
             equipo.Ubicacion = dto.Ubicacion;
