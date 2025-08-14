@@ -206,8 +206,6 @@ namespace InventoryApi.Controllers
             equipo.Modelo = dto.Modelo;
             equipo.Serie = dto.Serie;
             equipo.Imei = dto.Imei;
-            equipo.NumeroAsignado = dto.NumeroAsignado;
-            equipo.Extension = dto.Extension;
             equipo.Especificaciones = dto.Especificaciones;
             equipo.Accesorios = dto.Accesorios;
             equipo.Ubicacion = dto.Ubicacion;
