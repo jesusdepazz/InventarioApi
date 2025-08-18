@@ -7,6 +7,7 @@ namespace InventoryApi.Models
         public int Id { get; set; }
 
         //datos generales
+<<<<<<< HEAD
         public string? RegistroDeprec {  get; set; }
         public string? OrderCompra {  get; set; }
         public string? Factura { get; set; }
@@ -16,12 +17,27 @@ namespace InventoryApi.Models
         //datos de usuario
         public string? HojaNo {  get; set; }
         public DateTime? FechaActualizacion {  get; set; } = DateTime.Now;
+=======
+        public string RegistroDeprec { get; set; }
+        public string OrderCompra { get; set; }
+        public string Factura { get; set; }
+        public string Proveedor { get; set; }
+        public DateTime FechaIngreso { get; set; } = DateTime.Now;
+
+        //datos de usuario
+        public string HojaNo { get; set; }
+        public DateTime FechaActualizacion { get; set; } = DateTime.Now;
+>>>>>>> jesusdepazz
 
         //datos de equipos
 
         [Required]
         public string Codificacion { get; set; }
+<<<<<<< HEAD
         public string TipoEquipo {  get; set; }
+=======
+        public string TipoEquipo { get; set; }
+>>>>>>> jesusdepazz
 
         [Required]
         public string Marca { get; set; }
@@ -36,17 +52,30 @@ namespace InventoryApi.Models
         public string Accesorios { get; set; }
         public string Estado { get; set; }
         public string Tipo { get; set; }
+<<<<<<< HEAD
         public string? ResponsableAnterior { get; set; }
+=======
+        public string ResponsableAnterior { get; set; }
+>>>>>>> jesusdepazz
         public string? ImagenRuta { get; set; }
         public string Ubicacion { get; set; }
 
         //informacion de toma de inventario
+<<<<<<< HEAD
         public string? RevisadoTomaFisica { get; set; }
         public DateTime? FechaToma { get; set; } = DateTime.Now;
         public string? EstadoSticker { get; set; }
         public string? AsignadoHojaResponsabilidad { get; set; }
         public string? Comentarios {  get; set; }
         public string? Observaciones { get; set; }
+=======
+        public string RevisadoTomaFisica { get; set; }
+        public DateTime FechaToma { get; set; } = DateTime.Now;
+        public string EstadoSticker { get; set; }
+        public string AsignadoHojaResponsabilidad { get; set; }
+        public string Comentarios { get; set; }
+        public string Observaciones { get; set; }
+>>>>>>> jesusdepazz
 
     }
 }
