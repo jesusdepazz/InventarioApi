@@ -2,6 +2,7 @@
 using Inventory.Models;
 using InventoryApi.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace Inventory.Data
 {
@@ -16,7 +17,8 @@ namespace Inventory.Data
         public DbSet<Mantenimiento> Mantenimientos { get; set; }
         public DbSet<Solicitud> Solicitudes { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)     
+        public DbSet<HojaResponsabilidad> HojaResponsabilidades { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
@@ -25,6 +27,22 @@ namespace Inventory.Data
                 entity.ToTable("Empleado");
                 entity.HasKey(e => e.Empleado);
             });
+
+            modelBuilder.Entity<HojaResponsabilidad>(entity =>
+            {
+                entity.Property(h => h.CodigosEmpleados)
+                      .HasConversion(
+                          v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+                          v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null) ?? new List<string>()
+                      );
+
+                entity.Property(h => h.CodigosEquipos)
+                      .HasConversion(
+                          v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+                          v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null) ?? new List<string>()
+                      );
+            });
         }
+
     }
 }
