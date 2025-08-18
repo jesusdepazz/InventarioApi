@@ -15,11 +15,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReact", policy =>
     {
-<<<<<<< HEAD
         policy.WithOrigins("http://localhost:5173")
-=======
-        policy.WithOrigins("https://inventory-test.guandy.com")
->>>>>>> jesusdepazz
         .AllowAnyHeader()
         .AllowAnyMethod()
         .AllowCredentials();
@@ -33,10 +29,8 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI(c =>
+if (app.Environment.IsDevelopment())
 {
-<<<<<<< HEAD
     app.UseSwagger();
     app.UseSwaggerUI();
 }
@@ -44,16 +38,12 @@ app.UseSwaggerUI(c =>
 app.UseHttpsRedirection();
 
 app.UseCors("AllowReact");
-=======
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Inventario API V1");
-    c.RoutePrefix = "swagger";
-});
->>>>>>> jesusdepazz
 
-app.UseRouting();
-app.UseCors("AllowReact");
 app.UseAuthentication();
+
 app.UseAuthorization();
+
+app.UseStaticFiles();
 
 app.MapControllers();
 
