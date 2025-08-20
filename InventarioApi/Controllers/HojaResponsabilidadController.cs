@@ -36,6 +36,19 @@ namespace InventarioApi.Controllers
         [HttpPost]
         public async Task<ActionResult<HojaResponsabilidad>> PostHoja(HojaResponsabilidad hoja)
         {
+            var ultimo = await _context.HojaResponsabilidades
+                .OrderByDescending(h => h.Id)
+                .FirstOrDefaultAsync();
+
+            int siguienteNumero = 1;
+
+            if (ultimo != null && int.TryParse(ultimo.HojaNo, out int ultimoNumero))
+            {
+                siguienteNumero = ultimoNumero + 1;
+            }
+
+            hoja.HojaNo = siguienteNumero.ToString("D5");
+
             _context.HojaResponsabilidades.Add(hoja);
             await _context.SaveChangesAsync();
 

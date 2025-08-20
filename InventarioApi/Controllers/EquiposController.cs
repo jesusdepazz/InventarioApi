@@ -88,13 +88,15 @@ namespace InventoryApi.Controllers
             var equipo = await _context.Equipos
                 .Where(e => e.Codificacion == codificacion)
                 .Select(e => new
-                {
+                {   
+                    fechaIngreso = e.FechaIngreso,
                     codificacion = e.Codificacion,
                     marca = e.Marca,
                     modelo = e.Modelo,
                     serie = e.Serie,
                     estado = e.Estado,
                     tipo = e.Tipo,
+                    tipoEquipo = e.TipoEquipo,
                     ubicacion = e.Ubicacion
                 })
                 .FirstOrDefaultAsync();

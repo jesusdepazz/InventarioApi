@@ -5,35 +5,35 @@
 namespace InventarioApi.Migrations
 {
     /// <inheritdoc />
-    public partial class AddCamposRelacionals : Migration
+    public partial class Addcampos : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "CodigosEmpleados",
+                name: "Equipo",
                 table: "HojaResponsabilidades",
                 type: "nvarchar(max)",
                 nullable: false,
-                defaultValue: "[]");
+                defaultValue: "");
 
             migrationBuilder.AddColumn<string>(
-                name: "CodigosEquipos",
+                name: "FechaEquipo",
                 table: "HojaResponsabilidades",
                 type: "nvarchar(max)",
                 nullable: false,
-                defaultValue: "[]");
+                defaultValue: "");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "CodigosEmpleados",
+                name: "Equipo",
                 table: "HojaResponsabilidades");
 
             migrationBuilder.DropColumn(
-                name: "CodigosEquipos",
+                name: "FechaEquipo",
                 table: "HojaResponsabilidades");
         }
     }

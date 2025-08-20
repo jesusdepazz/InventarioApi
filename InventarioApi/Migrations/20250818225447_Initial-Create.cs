@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace InventarioApi.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreat : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -40,8 +40,8 @@ namespace InventarioApi.Migrations
                     Factura = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Proveedor = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FechaIngreso = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    HojaNo = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FechaActualizacion = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    HojaNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaActualizacion = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Codificacion = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TipoEquipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Marca = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -79,7 +79,16 @@ namespace InventarioApi.Migrations
                     JefeInmediato = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MotivoActualizacion = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AccesoriosEntregados = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Comentarios = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Comentarios = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CodigoEmpleado = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NombreEmpleado = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Puesto = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Departamento = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CodigoEquipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Modelo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Serie = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Ubicacion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Marca = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -155,7 +164,6 @@ namespace InventarioApi.Migrations
                 {
                     table.PrimaryKey("PK_Usuarios", x => x.Id);
                 });
-
         }
 
         /// <inheritdoc />

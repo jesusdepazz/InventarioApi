@@ -27,21 +27,6 @@ namespace Inventory.Data
                 entity.ToTable("Empleado");
                 entity.HasKey(e => e.Empleado);
             });
-
-            modelBuilder.Entity<HojaResponsabilidad>(entity =>
-            {
-                entity.Property(h => h.CodigosEmpleados)
-                      .HasConversion(
-                          v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
-                          v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null) ?? new List<string>()
-                      );
-
-                entity.Property(h => h.CodigosEquipos)
-                      .HasConversion(
-                          v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
-                          v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null) ?? new List<string>()
-                      );
-            });
         }
 
     }
