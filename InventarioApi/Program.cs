@@ -21,6 +21,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+    options.JsonSerializerOptions.MaxDepth = 64;
+});
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("react", policy =>
