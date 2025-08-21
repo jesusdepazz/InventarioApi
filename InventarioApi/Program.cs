@@ -1,7 +1,7 @@
 using Inventory.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Web;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,18 +9,27 @@ builder.Services.AddDbContext<InventarioContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+    .AddJwtBearer(options =>
+    {
+        builder.Configuration.Bind("AzureAd", options);
+
+        options.Authority = $"{builder.Configuration["AzureAd:Instance"]}{builder.Configuration["AzureAd:TenantId"]}";
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidAudience = builder.Configuration["AzureAd:Audience"],
+            ValidateIssuer = true
+        };
+    });
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReact", policy =>
+    options.AddPolicy("react", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
-        .AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowCredentials();
+        policy.WithOrigins("https://inventory-test.guandy.com")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
-
 });
 
 builder.Services.AddControllers();
@@ -29,15 +38,17 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Inventario API V1");
+    c.RoutePrefix = "swagger";
+});
+
 
 app.UseHttpsRedirection();
 
-app.UseCors("AllowReact");
+app.UseCors("react");
 
 app.UseAuthentication();
 
