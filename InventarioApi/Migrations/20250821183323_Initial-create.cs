@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace InventarioApi.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initialcreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -70,29 +70,19 @@ namespace InventarioApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "HojaResponsabilidades",
+                name: "HojasResponsabilidad",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    HojaNo = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    JefeInmediato = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MotivoActualizacion = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AccesoriosEntregados = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    HojaNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Motivo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Comentarios = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CodigoEmpleado = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NombreEmpleado = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Puesto = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Departamento = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CodigoEquipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Modelo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Serie = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Ubicacion = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Marca = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_HojaResponsabilidades", x => x.Id);
+                    table.PrimaryKey("PK_HojasResponsabilidad", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -164,6 +154,66 @@ namespace InventarioApi.Migrations
                 {
                     table.PrimaryKey("PK_Usuarios", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "HojaEmpleados",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    HojaResponsabilidadId = table.Column<int>(type: "int", nullable: false),
+                    EmpleadoId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Puesto = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Departamento = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HojaEmpleados", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_HojaEmpleados_HojasResponsabilidad_HojaResponsabilidadId",
+                        column: x => x.HojaResponsabilidadId,
+                        principalTable: "HojasResponsabilidad",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "HojaEquipos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    HojaResponsabilidadId = table.Column<int>(type: "int", nullable: false),
+                    Codificacion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Marca = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Modelo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Serie = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Tipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TipoEquipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Estado = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Ubicacion = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HojaEquipos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_HojaEquipos_HojasResponsabilidad_HojaResponsabilidadId",
+                        column: x => x.HojaResponsabilidadId,
+                        principalTable: "HojasResponsabilidad",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_HojaEmpleados_HojaResponsabilidadId",
+                table: "HojaEmpleados",
+                column: "HojaResponsabilidadId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_HojaEquipos_HojaResponsabilidadId",
+                table: "HojaEquipos",
+                column: "HojaResponsabilidadId");
         }
 
         /// <inheritdoc />
@@ -176,7 +226,10 @@ namespace InventarioApi.Migrations
                 name: "Equipos");
 
             migrationBuilder.DropTable(
-                name: "HojaResponsabilidades");
+                name: "HojaEmpleados");
+
+            migrationBuilder.DropTable(
+                name: "HojaEquipos");
 
             migrationBuilder.DropTable(
                 name: "Mantenimientos");
@@ -189,6 +242,9 @@ namespace InventarioApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "Usuarios");
+
+            migrationBuilder.DropTable(
+                name: "HojasResponsabilidad");
         }
     }
 }

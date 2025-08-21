@@ -1,38 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Text.Json.Serialization;
 
-namespace InventarioApi.Models
+public class HojaResponsabilidad
 {
-    public class HojaResponsabilidad
-    {
-        public int Id { get; set; }
-        public string? HojaNo { get; set; }
-        public DateTime FechaActualizacion { get; set; } = DateTime.Now;
-        public string JefeInmediato { get; set; }
-        public string MotivoActualizacion { get; set; }
-        public string Comentarios { get; set; }
+    public int Id { get; set; }
+    public string HojaNo { get; set; }
+    public string Motivo { get; set; }
+    public string Comentarios { get; set; }
+    public string Estado { get; set; }
+    public string SolvenciaNo { get; set; }
+    public DateTime FechaSolvencia { get; set; } = DateTime.Now;
+    public string Observaciones { get; set; }
+    public DateTime FechaCreacion { get; set; } = DateTime.Now;
 
-        // Datos del empleado asignado
-        public string CodigoEmpleado { get; set; }
-        public string NombreEmpleado { get; set; }
-        public string Puesto { get; set; }
-        public string Departamento { get; set; }
+    public List<HojaEmpleado> Empleados { get; set; } = new();
+    public List<HojaEquipo> Equipos { get; set; } = new();
+}
 
-        // Datos del equipo asignado
-        public string FechaEquipo { get; set; }
-        public string CodigoEquipo { get; set; }
-        public string Equipo { get; set; }
-        public string Modelo { get; set; }
-        public string Serie { get; set; }
-        public string Ubicacion { get; set; }
-        public string Marca { get; set; }
+public class HojaEmpleado
+{
+    public int Id { get; set; }
+    public int HojaResponsabilidadId { get; set; }
+    public string EmpleadoId { get; set; } // Código de empleado
+    public string Nombre { get; set; }
+    public string Puesto { get; set; }
+    public string Departamento { get; set; }
 
-        // Datos de responsabilidad
+    [JsonIgnore]
+    public HojaResponsabilidad HojaResponsabilidad { get; set; }
+}
 
-        public string Estado { get; set; }
-        public string SolvenciaNo { get; set; }
-        public DateTime FechaSolvencia { get; set; } = DateTime.Now;
-        public string Observaciones { get; set; }
+public class HojaEquipo
+{
+    public int Id { get; set; }
+    public int HojaResponsabilidadId { get; set; }
+    public string Codificacion { get; set; }
+    public string Marca { get; set; }
+    public string Modelo { get; set; }
+    public string Serie { get; set; }
+    public string Tipo { get; set; }
+    public string TipoEquipo { get; set; }
+    public string Estado { get; set; }
+    public string Ubicacion { get; set; }
 
-    }
+    [JsonIgnore]
+    public HojaResponsabilidad HojaResponsabilidad { get; set; }
 }
