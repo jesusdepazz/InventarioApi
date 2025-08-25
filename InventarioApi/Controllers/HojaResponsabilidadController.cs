@@ -95,4 +95,22 @@ public class HojasResponsabilidadController : ControllerBase
 
         return Ok(hojas);
     }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> EliminarHoja(int id)
+    {
+        var hoja = await _context.HojasResponsabilidad
+            .Include(h => h.Empleados)
+            .Include(h => h.Equipos)
+            .FirstOrDefaultAsync(h => h.Id == id);
+
+        if (hoja == null)
+            return NotFound(new { mensaje = "No se encontró la hoja con el ID especificado." });
+
+        _context.HojasResponsabilidad.Remove(hoja);
+        await _context.SaveChangesAsync();
+
+        return Ok(new { mensaje = "Hoja eliminada correctamente." });
+    }
+
 }

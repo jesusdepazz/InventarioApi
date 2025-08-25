@@ -26,6 +26,7 @@ public class HojaResponsabilidadDTO
     public string Estado { get; set; }
     public string SolvenciaNo { get; set; }
     public DateTime FechaSolvencia { get; set; } = DateTime.Now;
+    public DateTime FechaCreacion { get; set; } = DateTime.Now;
     public string Observaciones { get; set; }
 
     public List<HojaEmpleadoDTO> Empleados { get; set; } = new();
