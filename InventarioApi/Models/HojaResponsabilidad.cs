@@ -21,7 +21,6 @@ public class HojaEmpleado
     public int Id { get; set; }
     public int HojaResponsabilidadId { get; set; }
     public string EmpleadoId { get; set; } 
-    public string JefeId { get; set; }
     public string Nombre { get; set; }
     public string Puesto { get; set; }
     public string Departamento { get; set; }
