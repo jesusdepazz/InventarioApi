@@ -44,6 +44,7 @@ public class HojasResponsabilidadController : ControllerBase
             SolvenciaNo = dto.SolvenciaNo,
             FechaSolvencia = dto.FechaSolvencia,
             Observaciones = dto.Observaciones,
+            Accesorios = dto.Accesorios, 
             Empleados = dto.Empleados.Select(e => new HojaEmpleado
             {
                 EmpleadoId = e.EmpleadoId,
@@ -60,7 +61,8 @@ public class HojasResponsabilidadController : ControllerBase
                 Tipo = eq.Tipo,
                 TipoEquipo = eq.TipoEquipo,
                 Estado = eq.Estado,
-                Ubicacion = eq.Ubicacion
+                Ubicacion = eq.Ubicacion,
+                FechaIngreso = eq.FechaIngreso,
             }).ToList()
         };
 
