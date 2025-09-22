@@ -5,8 +5,6 @@ namespace InventoryApi.Models
     public class Equipo
     {
         public int Id { get; set; }
-
-        //datos generales
         public string? RegistroDeprec {  get; set; }
         public string? OrderCompra {  get; set; }
         public string? Factura { get; set; }
@@ -15,8 +13,6 @@ namespace InventoryApi.Models
 
         public string HojaNo { get; set; }
         public DateTime FechaActualizacion { get; set; } = DateTime.Now;
-
-        //datos de equipos
 
         [Required]
         public string Codificacion { get; set; }
@@ -38,8 +34,6 @@ namespace InventoryApi.Models
         public string? ResponsableAnterior { get; set; }
         public string? ImagenRuta { get; set; }
         public string Ubicacion { get; set; }
-
-        //informacion de toma de inventario
         public string? RevisadoTomaFisica { get; set; }
         public DateTime? FechaToma { get; set; } = DateTime.Now;
         public string? EstadoSticker { get; set; }

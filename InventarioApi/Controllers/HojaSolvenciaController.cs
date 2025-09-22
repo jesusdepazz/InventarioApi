@@ -73,5 +73,21 @@ namespace InventarioApi.Controllers
             return Ok(historico);
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> EliminarSolvencia(int id)
+        {
+            var solvencia = await _context.Solvencias.FindAsync(id);
+            if (solvencia == null)
+            {
+                return NotFound("No se encontró la solvencia.");
+            }
+
+            _context.Solvencias.Remove(solvencia);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { mensaje = "Solvencia eliminada correctamente." });
+        }
+
+
     }
 }
