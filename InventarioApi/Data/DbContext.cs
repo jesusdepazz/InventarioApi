@@ -18,6 +18,7 @@ namespace Inventory.Data
         public DbSet<Mantenimiento> Mantenimientos { get; set; }
         public DbSet<Solicitud> Solicitudes { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<HojaSolvencia> Solvencias { get; set; }
         public DbSet<HojaResponsabilidad> HojasResponsabilidad { get; set; }
         public DbSet<HojaEmpleado> HojaEmpleados { get; set; }
         public DbSet<HojaEquipo> HojaEquipos { get; set; }
@@ -52,6 +53,11 @@ namespace Inventory.Data
                       .WithMany(h => h.Equipos)
                       .HasForeignKey(h => h.HojaResponsabilidadId);
             });
+
+            modelBuilder.Entity<HojaSolvencia>()
+            .HasOne(s => s.HojaResponsabilidad)
+            .WithMany(h => h.Solvencias)
+            .HasForeignKey(s => s.HojaResponsabilidadId);
         }
     }
 }
