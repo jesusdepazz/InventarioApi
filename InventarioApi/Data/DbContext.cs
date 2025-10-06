@@ -8,8 +8,6 @@ namespace Inventory.Data
     public class InventarioContext : DbContext
     {
         public InventarioContext(DbContextOptions<InventarioContext> options) : base(options) { }
-
-        // Tablas existentes
         public DbSet<Equipo> Equipos { get; set; }
         public DbSet<Ubicacion> Ubicaciones { get; set; }
         public DbSet<EmpleadoInfo> EmpleadosInfo { get; set; }
@@ -22,6 +20,7 @@ namespace Inventory.Data
         public DbSet<HojaResponsabilidad> HojasResponsabilidad { get; set; }
         public DbSet<HojaEmpleado> HojaEmpleados { get; set; }
         public DbSet<HojaEquipo> HojaEquipos { get; set; }
+        public DbSet<Traslado> Traslados { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
