@@ -21,27 +21,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-    options.JsonSerializerOptions.MaxDepth = 64;
-});
-
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("react", policy =>
+    options.AddPolicy("Web", policy =>
     {
         policy.WithOrigins("https://inventory-test.guandy.com")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
     });
-});
-
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
-    options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
 });
 
 builder.Services.AddControllers();
@@ -60,7 +48,7 @@ app.UseSwaggerUI(c =>
 
 app.UseHttpsRedirection();
 
-app.UseCors("react");
+app.UseCors("Web");
 
 app.UseAuthentication();
 
