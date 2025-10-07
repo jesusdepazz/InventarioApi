@@ -4,6 +4,7 @@ using Inventory.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventarioApi.Migrations
 {
     [DbContext(typeof(InventarioContext))]
-    partial class InventarioContextModelSnapshot : ModelSnapshot
+    [Migration("20251006231401_Quitando-campos-excel")]
+    partial class Quitandocamposexcel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -479,34 +482,13 @@ namespace InventarioApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-<<<<<<< HEAD
-                    b.Property<string>("Accesorios")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AsignadoHojaResponsabilidad")
-                        .HasColumnType("nvarchar(max)");
-
-=======
->>>>>>> local
                     b.Property<string>("Codificacion")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Comentarios")
-<<<<<<< HEAD
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Especificaciones")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Estado")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EstadoSticker")
-=======
->>>>>>> local
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Extension")
@@ -515,27 +497,13 @@ namespace InventarioApi.Migrations
                     b.Property<string>("Factura")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("FechaActualizacion")
+                    b.Property<DateTime>("FechaActualizacion")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("FechaIngreso")
-                        .HasColumnType("datetime2");
-
-<<<<<<< HEAD
-                    b.Property<DateTime?>("FechaToma")
+                    b.Property<DateTime>("FechaIngreso")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("HojaNo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImagenRuta")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Imei")
-                        .IsRequired()
-=======
-                    b.Property<string>("HojaNo")
->>>>>>> local
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Marca")
@@ -547,21 +515,6 @@ namespace InventarioApi.Migrations
                     b.Property<string>("Observaciones")
                         .HasColumnType("nvarchar(max)");
 
-<<<<<<< HEAD
-                    b.Property<string>("OrderCompra")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Proveedor")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RegistroDeprec")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ResponsableAnterior")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RevisadoTomaFisica")
-=======
                     b.Property<string>("OrdenCompra")
                         .HasColumnType("nvarchar(max)");
 
@@ -569,7 +522,6 @@ namespace InventarioApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ResponsableAnterior")
->>>>>>> local
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Serie")

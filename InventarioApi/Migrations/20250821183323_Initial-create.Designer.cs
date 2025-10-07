@@ -4,6 +4,7 @@ using Inventory.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventarioApi.Migrations
 {
     [DbContext(typeof(InventarioContext))]
-    partial class InventarioContextModelSnapshot : ModelSnapshot
+    [Migration("20250821183323_Initial-create")]
+    partial class Initialcreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,10 +75,6 @@ namespace InventarioApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FechaIngreso")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("HojaResponsabilidadId")
                         .HasColumnType("int");
 
@@ -118,21 +117,11 @@ namespace InventarioApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Accesorios")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Comentarios")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Estado")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaSolvencia")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("HojaNo")
@@ -141,13 +130,6 @@ namespace InventarioApi.Migrations
 
                     b.Property<string>("Motivo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Observaciones")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SolvenciaNo")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -232,53 +214,6 @@ namespace InventarioApi.Migrations
                     b.HasIndex("Departamento");
 
                     b.ToTable("Empleado", (string)null);
-                });
-
-            modelBuilder.Entity("InventarioApi.Models.HojaSolvencia", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Empleados")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Equipos")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("FechaHoja")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaRegistro")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaSolvencia")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("HojaNo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("HojaResponsabilidadId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Observaciones")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SolvenciaNo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("HojaResponsabilidadId");
-
-                    b.ToTable("Solvencias");
                 });
 
             modelBuilder.Entity("InventarioApi.Models.Mantenimiento", b =>
@@ -382,57 +317,6 @@ namespace InventarioApi.Migrations
                     b.ToTable("Solicitudes");
                 });
 
-            modelBuilder.Entity("InventarioApi.Models.Traslado", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("DescripcionEquipo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("FechaEmision")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaLiquidacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Motivo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("No")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Razon")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Solicitante")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UbicacionDesde")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UbicacionHasta")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Traslados");
-                });
-
             modelBuilder.Entity("InventarioApi.Models.Usuario", b =>
                 {
                     b.Property<int>("Id")
@@ -479,7 +363,6 @@ namespace InventarioApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-<<<<<<< HEAD
                     b.Property<string>("Accesorios")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -487,13 +370,11 @@ namespace InventarioApi.Migrations
                     b.Property<string>("AsignadoHojaResponsabilidad")
                         .HasColumnType("nvarchar(max)");
 
-=======
->>>>>>> local
                     b.Property<string>("Codificacion")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Comentarios")
-<<<<<<< HEAD
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Especificaciones")
@@ -505,8 +386,6 @@ namespace InventarioApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EstadoSticker")
-=======
->>>>>>> local
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Extension")
@@ -515,17 +394,17 @@ namespace InventarioApi.Migrations
                     b.Property<string>("Factura")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("FechaActualizacion")
+                    b.Property<DateTime>("FechaActualizacion")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("FechaIngreso")
                         .HasColumnType("datetime2");
 
-<<<<<<< HEAD
                     b.Property<DateTime?>("FechaToma")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("HojaNo")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImagenRuta")
@@ -533,21 +412,22 @@ namespace InventarioApi.Migrations
 
                     b.Property<string>("Imei")
                         .IsRequired()
-=======
-                    b.Property<string>("HojaNo")
->>>>>>> local
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Marca")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Modelo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NumeroAsignado")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Observaciones")
                         .HasColumnType("nvarchar(max)");
 
-<<<<<<< HEAD
                     b.Property<string>("OrderCompra")
                         .HasColumnType("nvarchar(max)");
 
@@ -561,24 +441,22 @@ namespace InventarioApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RevisadoTomaFisica")
-=======
-                    b.Property<string>("OrdenCompra")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Proveedor")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ResponsableAnterior")
->>>>>>> local
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Serie")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TipoEquipo")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ubicacion")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -619,24 +497,11 @@ namespace InventarioApi.Migrations
                     b.Navigation("DepartamentoInfo");
                 });
 
-            modelBuilder.Entity("InventarioApi.Models.HojaSolvencia", b =>
-                {
-                    b.HasOne("HojaResponsabilidad", "HojaResponsabilidad")
-                        .WithMany("Solvencias")
-                        .HasForeignKey("HojaResponsabilidadId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("HojaResponsabilidad");
-                });
-
             modelBuilder.Entity("HojaResponsabilidad", b =>
                 {
                     b.Navigation("Empleados");
 
                     b.Navigation("Equipos");
-
-                    b.Navigation("Solvencias");
                 });
 
             modelBuilder.Entity("InventarioApi.Models.Departamento", b =>
