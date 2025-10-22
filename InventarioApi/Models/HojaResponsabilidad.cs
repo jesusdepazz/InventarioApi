@@ -39,7 +39,6 @@ public class HojaEquipo
     public string Marca { get; set; }
     public string Modelo { get; set; }
     public string Serie { get; set; }
-    public string Tipo { get; set; }
     public string TipoEquipo { get; set; }
     public string Estado { get; set; }
     public string Ubicacion { get; set; }

@@ -60,14 +60,14 @@ namespace InventarioApi.Controllers
                 return NotFound();
 
             traslado.FechaEmision = updatedTraslado.FechaEmision;
-            traslado.Solicitante = updatedTraslado.Solicitante;
-            traslado.DescripcionEquipo = updatedTraslado.DescripcionEquipo;
+            traslado.PersonaEntrega = updatedTraslado.PersonaEntrega;
+            traslado.PersonaRecibe = updatedTraslado.PersonaEntrega;
             traslado.Motivo = updatedTraslado.Motivo;
             traslado.UbicacionDesde = updatedTraslado.UbicacionDesde;
             traslado.UbicacionHasta = updatedTraslado.UbicacionHasta;
             traslado.Status = updatedTraslado.Status;
-            traslado.FechaLiquidacion = updatedTraslado.FechaLiquidacion;
-            traslado.Razon = updatedTraslado.Razon;
+            traslado.Equipo = updatedTraslado.Equipo;
+            traslado.Observaciones = updatedTraslado.Observaciones;
 
             _context.Entry(traslado).State = EntityState.Modified;
             await _context.SaveChangesAsync();
@@ -87,23 +87,6 @@ namespace InventarioApi.Controllers
 
             return NoContent();
         }
-
-        //[HttpGet("consultar-nit/{nit}")]
-        //public async Task<IActionResult> ConsultarNit(string nit)
-        //{
-        //    using var client = new HttpClient();
-        //    client.DefaultRequestHeaders.Add("Authorization", "Bearer NDM0MzA3NzU=");
-        //    client.DefaultRequestHeaders.Add("Accept", "application/json");
-
-        //    var body = new { NIT = nit };
-        //    var response = await client.PostAsJsonAsync("https://minirtu.edxsolutions.com/api/GetRTUData", body);
-
-        //    if (!response.IsSuccessStatusCode)
-        //        return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
-
-        //    var data = await response.Content.ReadAsStringAsync();
-        //    return Ok(data);
-        //}
 
     }
 }

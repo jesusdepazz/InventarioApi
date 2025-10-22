@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using InventarioApi.Models;
 
 namespace Inventory.Models;
 
@@ -9,4 +10,8 @@ public class Ubicacion
 
     [Required]
     public string Nombre { get; set; }
+
+    public ICollection<InventarioSuministro>? Inventarios { get; set; }
+    public ICollection<MovimientoSuministro>? MovimientosOrigen { get; set; }
+    public ICollection<MovimientoSuministro>? MovimientosDestino { get; set; }
 }

@@ -58,7 +58,6 @@ public class HojasResponsabilidadController : ControllerBase
                 Marca = eq.Marca,
                 Modelo = eq.Modelo,
                 Serie = eq.Serie,
-                Tipo = eq.Tipo,
                 TipoEquipo = eq.TipoEquipo,
                 Estado = eq.Estado,
                 Ubicacion = eq.Ubicacion,
