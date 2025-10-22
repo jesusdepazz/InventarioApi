@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventarioApi.Migrations
 {
     [DbContext(typeof(InventarioContext))]
-    [Migration("20251015214839_Agregando-BajasActivos")]
-    partial class AgregandoBajasActivos
+    [Migration("20251022214252_Merge")]
+    partial class Merge
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

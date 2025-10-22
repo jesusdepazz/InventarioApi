@@ -5,18 +5,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace InventarioApi.Migrations
 {
-    /// <inheritdoc />
-<<<<<<< HEAD:InventarioApi/Migrations/20251013165227_First-Migration.cs
-    public partial class FirstMigration : Migration
-=======
-<<<<<<<< HEAD:InventarioApi/Migrations/20250814151800_Actualizacion_datos.cs
-    public partial class Actualizacion_datos : Migration
-========
-    public partial class Initialcreate : Migration
->>>>>>>> local:InventarioApi/Migrations/20250821183323_Initial-create.cs
->>>>>>> 2d1ed83b18547975d2a15c05aaca6cfda9324315:InventarioApi/Migrations/20250821183323_Initial-create.cs
+    public partial class Merge : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -37,51 +27,22 @@ namespace InventarioApi.Migrations
                     table.PrimaryKey("PK_Asignaciones", x => x.Id);
                 });
 
-
             migrationBuilder.CreateTable(
-                name: "Equipos",
+                name: "BajaActivos",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    OrdenCompra = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Factura = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Proveedor = table.Column<string>(type: "nvarchar(max)", nullable: true),
-<<<<<<< HEAD:InventarioApi/Migrations/20251013165227_First-Migration.cs
-                    FechaIngreso = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    HojaNo = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FechaActualizacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Codificacion = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TipoEquipo = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Marca = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Modelo = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Serie = table.Column<string>(type: "nvarchar(max)", nullable: true),
-=======
-                    FechaIngreso = table.Column<DateTime>(type: "datetime2", nullable: true),
-<<<<<<<< HEAD:InventarioApi/Migrations/20250814151800_Actualizacion_datos.cs
-                    HojaNo = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FechaActualizacion = table.Column<DateTime>(type: "datetime2", nullable: true),
-========
-                    HojaNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FechaActualizacion = table.Column<DateTime>(type: "datetime2", nullable: false),
->>>>>>>> local:InventarioApi/Migrations/20250821183323_Initial-create.cs
-                    Codificacion = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TipoEquipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Marca = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Modelo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Serie = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Imei = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NumeroAsignado = table.Column<string>(type: "nvarchar(max)", nullable: true),
->>>>>>> 2d1ed83b18547975d2a15c05aaca6cfda9324315:InventarioApi/Migrations/20250821183323_Initial-create.cs
-                    Extension = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Ubicacion = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ResponsableAnterior = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Comentarios = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Observaciones = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    FechaBaja = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CodificacionEquipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MotivoBaja = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DetallesBaja = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UbicacionActual = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UbicacionDestino = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Equipos", x => x.Id);
+                    table.PrimaryKey("PK_BajaActivos", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -185,33 +146,6 @@ namespace InventarioApi.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Traslados", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Ubicaciones",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Ubicaciones", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Usuarios",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Correo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Rol = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Usuarios", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -397,12 +331,13 @@ namespace InventarioApi.Migrations
                 column: "HojaResponsabilidadId");
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "Asignaciones");
 
+            migrationBuilder.DropTable(
+                name: "BajaActivos");
 
             migrationBuilder.DropTable(
                 name: "HojaEmpleados");
@@ -428,25 +363,12 @@ namespace InventarioApi.Migrations
             migrationBuilder.DropTable(
                 name: "Traslados");
 
-            migrationBuilder.DropTable(
-                name: "Usuarios");
 
-<<<<<<< HEAD:InventarioApi/Migrations/20251013165227_First-Migration.cs
             migrationBuilder.DropTable(
                 name: "Suministros");
 
             migrationBuilder.DropTable(
-                name: "Ubicaciones");
-
-            migrationBuilder.DropTable(
                 name: "HojasResponsabilidad");
-=======
-<<<<<<<< HEAD:InventarioApi/Migrations/20250814151800_Actualizacion_datos.cs
-========
-            migrationBuilder.DropTable(
-                name: "HojasResponsabilidad");
->>>>>>>> local:InventarioApi/Migrations/20250821183323_Initial-create.cs
->>>>>>> 2d1ed83b18547975d2a15c05aaca6cfda9324315:InventarioApi/Migrations/20250821183323_Initial-create.cs
         }
     }
 }

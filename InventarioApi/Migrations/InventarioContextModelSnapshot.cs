@@ -612,42 +612,10 @@ namespace InventarioApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-<<<<<<< HEAD
-                    b.Property<string>("Accesorios")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AsignadoHojaResponsabilidad")
-                        .HasColumnType("nvarchar(max)");
-
-=======
-<<<<<<< HEAD
->>>>>>> jesusdepazz
-=======
->>>>>>> local
->>>>>>> 2d1ed83b18547975d2a15c05aaca6cfda9324315
                     b.Property<string>("Codificacion")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Comentarios")
-<<<<<<< HEAD
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Especificaciones")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Estado")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EstadoSticker")
-=======
-<<<<<<< HEAD
->>>>>>> jesusdepazz
-=======
->>>>>>> local
->>>>>>> 2d1ed83b18547975d2a15c05aaca6cfda9324315
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Extension")
@@ -656,31 +624,13 @@ namespace InventarioApi.Migrations
                     b.Property<string>("Factura")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("FechaActualizacion")
+                    b.Property<DateTime>("FechaActualizacion")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("FechaIngreso")
-                        .HasColumnType("datetime2");
-
-<<<<<<< HEAD
-                    b.Property<DateTime?>("FechaToma")
+                    b.Property<DateTime>("FechaIngreso")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("HojaNo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImagenRuta")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Imei")
-                        .IsRequired()
-=======
-                    b.Property<string>("HojaNo")
-<<<<<<< HEAD
->>>>>>> jesusdepazz
-=======
->>>>>>> local
->>>>>>> 2d1ed83b18547975d2a15c05aaca6cfda9324315
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Marca")
@@ -692,21 +642,6 @@ namespace InventarioApi.Migrations
                     b.Property<string>("Observaciones")
                         .HasColumnType("nvarchar(max)");
 
-<<<<<<< HEAD
-                    b.Property<string>("OrderCompra")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Proveedor")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RegistroDeprec")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ResponsableAnterior")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RevisadoTomaFisica")
-=======
                     b.Property<string>("OrdenCompra")
                         .HasColumnType("nvarchar(max)");
 
@@ -714,11 +649,6 @@ namespace InventarioApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ResponsableAnterior")
-<<<<<<< HEAD
->>>>>>> jesusdepazz
-=======
->>>>>>> local
->>>>>>> 2d1ed83b18547975d2a15c05aaca6cfda9324315
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Serie")
