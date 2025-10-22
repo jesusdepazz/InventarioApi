@@ -29,7 +29,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("react", policy =>
+    options.AddPolicy("App", policy =>
     {
         policy.WithOrigins("https://inventory.guandy.com")
               .AllowAnyHeader()
@@ -60,7 +60,7 @@ app.UseSwaggerUI(c =>
 
 app.UseHttpsRedirection();
 
-app.UseCors("react");
+app.UseCors("App");
 
 app.UseAuthentication();
 
