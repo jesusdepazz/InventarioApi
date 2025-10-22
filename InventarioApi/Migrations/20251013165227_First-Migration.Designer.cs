@@ -12,8 +12,18 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventarioApi.Migrations
 {
     [DbContext(typeof(InventarioContext))]
+<<<<<<< HEAD:InventarioApi/Migrations/20251013165227_First-Migration.Designer.cs
     [Migration("20251013165227_First-Migration")]
     partial class FirstMigration
+=======
+<<<<<<<< HEAD:InventarioApi/Migrations/20250814151800_Actualizacion_datos.Designer.cs
+    [Migration("20250814151800_Actualizacion_datos")]
+    partial class Actualizacion_datos
+========
+    [Migration("20250821222926_Para-Prueba")]
+    partial class ParaPrueba
+>>>>>>>> local:InventarioApi/Migrations/20250821222926_Para-Prueba.Designer.cs
+>>>>>>> 2d1ed83b18547975d2a15c05aaca6cfda9324315:InventarioApi/Migrations/20250821222926_Para-Prueba.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

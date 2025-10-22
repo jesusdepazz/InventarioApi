@@ -6,7 +6,15 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace InventarioApi.Migrations
 {
     /// <inheritdoc />
+<<<<<<< HEAD
     public partial class Actualizacion_datos : Migration
+=======
+<<<<<<<< HEAD:InventarioApi/Migrations/20250814151800_Actualizacion_datos.cs
+    public partial class Actualizacion_datos : Migration
+========
+    public partial class Initialcreate : Migration
+>>>>>>>> local:InventarioApi/Migrations/20250821183323_Initial-create.cs
+>>>>>>> 2d1ed83b18547975d2a15c05aaca6cfda9324315
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -41,8 +49,18 @@ namespace InventarioApi.Migrations
                     Factura = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Proveedor = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FechaIngreso = table.Column<DateTime>(type: "datetime2", nullable: true),
+<<<<<<< HEAD
                     HojaNo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FechaActualizacion = table.Column<DateTime>(type: "datetime2", nullable: true),
+=======
+<<<<<<<< HEAD:InventarioApi/Migrations/20250814151800_Actualizacion_datos.cs
+                    HojaNo = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FechaActualizacion = table.Column<DateTime>(type: "datetime2", nullable: true),
+========
+                    HojaNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaActualizacion = table.Column<DateTime>(type: "datetime2", nullable: false),
+>>>>>>>> local:InventarioApi/Migrations/20250821183323_Initial-create.cs
+>>>>>>> 2d1ed83b18547975d2a15c05aaca6cfda9324315
                     Codificacion = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TipoEquipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Marca = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -163,6 +181,14 @@ namespace InventarioApi.Migrations
             migrationBuilder.DropTable(
                 name: "Usuarios");
 
+<<<<<<< HEAD
+=======
+<<<<<<<< HEAD:InventarioApi/Migrations/20250814151800_Actualizacion_datos.cs
+========
+            migrationBuilder.DropTable(
+                name: "HojasResponsabilidad");
+>>>>>>>> local:InventarioApi/Migrations/20250821183323_Initial-create.cs
+>>>>>>> 2d1ed83b18547975d2a15c05aaca6cfda9324315
         }
     }
 }

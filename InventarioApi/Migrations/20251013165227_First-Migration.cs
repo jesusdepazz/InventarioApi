@@ -6,7 +6,15 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace InventarioApi.Migrations
 {
     /// <inheritdoc />
+<<<<<<< HEAD:InventarioApi/Migrations/20251013165227_First-Migration.cs
     public partial class FirstMigration : Migration
+=======
+<<<<<<<< HEAD:InventarioApi/Migrations/20250814151800_Actualizacion_datos.cs
+    public partial class Actualizacion_datos : Migration
+========
+    public partial class Initialcreate : Migration
+>>>>>>>> local:InventarioApi/Migrations/20250821183323_Initial-create.cs
+>>>>>>> 2d1ed83b18547975d2a15c05aaca6cfda9324315:InventarioApi/Migrations/20250821183323_Initial-create.cs
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -39,6 +47,7 @@ namespace InventarioApi.Migrations
                     OrdenCompra = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Factura = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Proveedor = table.Column<string>(type: "nvarchar(max)", nullable: true),
+<<<<<<< HEAD:InventarioApi/Migrations/20251013165227_First-Migration.cs
                     FechaIngreso = table.Column<DateTime>(type: "datetime2", nullable: false),
                     HojaNo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FechaActualizacion = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -47,6 +56,23 @@ namespace InventarioApi.Migrations
                     Marca = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Modelo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Serie = table.Column<string>(type: "nvarchar(max)", nullable: true),
+=======
+                    FechaIngreso = table.Column<DateTime>(type: "datetime2", nullable: true),
+<<<<<<<< HEAD:InventarioApi/Migrations/20250814151800_Actualizacion_datos.cs
+                    HojaNo = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FechaActualizacion = table.Column<DateTime>(type: "datetime2", nullable: true),
+========
+                    HojaNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaActualizacion = table.Column<DateTime>(type: "datetime2", nullable: false),
+>>>>>>>> local:InventarioApi/Migrations/20250821183323_Initial-create.cs
+                    Codificacion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TipoEquipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Marca = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Modelo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Serie = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Imei = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NumeroAsignado = table.Column<string>(type: "nvarchar(max)", nullable: true),
+>>>>>>> 2d1ed83b18547975d2a15c05aaca6cfda9324315:InventarioApi/Migrations/20250821183323_Initial-create.cs
                     Extension = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Ubicacion = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ResponsableAnterior = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -405,6 +431,7 @@ namespace InventarioApi.Migrations
             migrationBuilder.DropTable(
                 name: "Usuarios");
 
+<<<<<<< HEAD:InventarioApi/Migrations/20251013165227_First-Migration.cs
             migrationBuilder.DropTable(
                 name: "Suministros");
 
@@ -413,6 +440,13 @@ namespace InventarioApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "HojasResponsabilidad");
+=======
+<<<<<<<< HEAD:InventarioApi/Migrations/20250814151800_Actualizacion_datos.cs
+========
+            migrationBuilder.DropTable(
+                name: "HojasResponsabilidad");
+>>>>>>>> local:InventarioApi/Migrations/20250821183323_Initial-create.cs
+>>>>>>> 2d1ed83b18547975d2a15c05aaca6cfda9324315:InventarioApi/Migrations/20250821183323_Initial-create.cs
         }
     }
 }
