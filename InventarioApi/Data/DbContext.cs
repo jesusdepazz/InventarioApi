@@ -21,7 +21,10 @@ namespace Inventory.Data
         public DbSet<HojaEmpleado> HojaEmpleados { get; set; }
         public DbSet<HojaEquipo> HojaEquipos { get; set; }
         public DbSet<Traslado> Traslados { get; set; }
-
+        public DbSet<Suministro> Suministros { get; set; }
+        public DbSet<InventarioSuministro> InventarioSuministros { get; set; }
+        public DbSet<MovimientoSuministro> MovimientoSuministros { get; set; }
+        public DbSet<BajaActivo> BajaActivos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -57,6 +60,18 @@ namespace Inventory.Data
             .HasOne(s => s.HojaResponsabilidad)
             .WithMany(h => h.Solvencias)
             .HasForeignKey(s => s.HojaResponsabilidadId);
+
+            modelBuilder.Entity<MovimientoSuministro>()
+                .HasOne(m => m.UbicacionOrigen)
+                .WithMany(u => u.MovimientosOrigen)
+                .HasForeignKey(m => m.UbicacionOrigenId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<MovimientoSuministro>()
+                .HasOne(m => m.UbicacionDestino)
+                .WithMany(u => u.MovimientosDestino)
+                .HasForeignKey(m => m.UbicacionDestinoId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
