@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using InventoryApi.Models;
 using Inventory.Data;
+using ExcelDataReader;
 
 namespace InventoryApi.Controllers
 {
@@ -25,8 +26,7 @@ namespace InventoryApi.Controllers
                 .Select(e => new
                 {
                     e.Id,
-                    e.RegistroDeprec,
-                    e.OrderCompra,
+                    e.OrdenCompra,
                     e.Factura,
                     e.Proveedor,
                     e.FechaIngreso,
@@ -38,19 +38,8 @@ namespace InventoryApi.Controllers
                     e.Marca,
                     e.Modelo,
                     e.Serie,
-                    e.Imei,
-                    e.NumeroAsignado,
                     e.Extension,
-                    e.Estado,
-                    e.Tipo,
-                    e.Especificaciones,
-                    e.Accesorios,
                     e.Ubicacion,
-                    e.ImagenRuta,
-                    e.RevisadoTomaFisica,
-                    e.FechaToma,
-                    e.EstadoSticker,
-                    e.AsignadoHojaResponsabilidad,
                     e.Comentarios,
                     e.Observaciones,
 
@@ -88,13 +77,13 @@ namespace InventoryApi.Controllers
             var equipo = await _context.Equipos
                 .Where(e => e.Codificacion == codificacion)
                 .Select(e => new
-                {
+                {   
+                    fechaIngreso = e.FechaIngreso,
                     codificacion = e.Codificacion,
                     marca = e.Marca,
                     modelo = e.Modelo,
                     serie = e.Serie,
-                    estado = e.Estado,
-                    tipo = e.Tipo,
+                    tipoEquipo = e.TipoEquipo,
                     ubicacion = e.Ubicacion
                 })
                 .FirstOrDefaultAsync();
@@ -121,27 +110,9 @@ namespace InventoryApi.Controllers
                 await _context.Equipos.AnyAsync(e => e.Serie == dto.Serie))
                 return BadRequest("Ya existe un equipo con la misma Serie.");
 
-            string? rutaImagen = null;
-            if (dto.Imagen != null && dto.Imagen.Length > 0)
-            {
-                var carpeta = Path.Combine(_env.WebRootPath, "images");
-                Directory.CreateDirectory(carpeta);
-
-                var nombreArchivo = $"{Guid.NewGuid()}{Path.GetExtension(dto.Imagen.FileName)}";
-                var rutaCompleta = Path.Combine(carpeta, nombreArchivo);
-
-                using (var stream = new FileStream(rutaCompleta, FileMode.Create))
-                {
-                    await dto.Imagen.CopyToAsync(stream);
-                }
-
-                rutaImagen = $"/images/{nombreArchivo}";
-            }
-
             var equipo = new Equipo
             {
-                RegistroDeprec = dto.RegistroDeprec,
-                OrderCompra = dto.OrderCompra,
+                OrdenCompra = dto.OrdenCompra,
                 Factura = dto.Factura,
                 Proveedor = dto.Proveedor,
                 FechaIngreso = dto.FechaIngreso,
@@ -150,22 +121,11 @@ namespace InventoryApi.Controllers
                 ResponsableAnterior = dto.ResponsableAnterior,
                 Codificacion = dto.Codificacion,
                 TipoEquipo = dto.TipoEquipo,
-                Estado = dto.Estado,
                 Marca = dto.Marca,
                 Modelo = dto.Modelo,
                 Serie = dto.Serie,
-                Imei = dto.Imei,
-                NumeroAsignado = dto.NumeroAsignado,
                 Extension = dto.Extension,
-                Especificaciones = dto.Especificaciones,
-                Accesorios = dto.Accesorios,
-                Tipo = dto.Tipo,
                 Ubicacion = dto.Ubicacion,
-                ImagenRuta = rutaImagen,
-                RevisadoTomaFisica = dto.RevisadoTomaFisica,
-                FechaToma = dto.FechaToma,
-                EstadoSticker = dto.EstadoSticker,
-                AsignadoHojaResponsabilidad = dto.AsignadoHojaResponsabilidad,
                 Comentarios = dto.Comentarios,
                 Observaciones = dto.Observaciones,
             };
@@ -199,34 +159,12 @@ namespace InventoryApi.Controllers
             if (equipo == null)
                 return NotFound("Equipo no encontrado");
 
-            equipo.Tipo = dto.Tipo;
             equipo.Codificacion = dto.Codificacion;
-            equipo.Estado = dto.Estado;
             equipo.Marca = dto.Marca;
             equipo.Modelo = dto.Modelo;
             equipo.Serie = dto.Serie;
-            equipo.Imei = dto.Imei;
-            equipo.Especificaciones = dto.Especificaciones;
-            equipo.Accesorios = dto.Accesorios;
             equipo.Ubicacion = dto.Ubicacion;
             equipo.FechaIngreso = dto.FechaIngreso;
-
-            if (dto.Imagen != null && dto.Imagen.Length > 0)
-            {
-                var nombreArchivo = $"{Guid.NewGuid()}_{dto.Imagen.FileName}";
-                var rutaCarpeta = Path.Combine(_env.WebRootPath, "uploads");
-
-                if (!Directory.Exists(rutaCarpeta))
-                    Directory.CreateDirectory(rutaCarpeta);
-
-                var rutaArchivo = Path.Combine(rutaCarpeta, nombreArchivo);
-                using (var stream = new FileStream(rutaArchivo, FileMode.Create))
-                {
-                    await dto.Imagen.CopyToAsync(stream);
-                }
-
-                equipo.ImagenRuta = $"/uploads/{nombreArchivo}";
-            }
 
             try
             {
@@ -237,6 +175,65 @@ namespace InventoryApi.Controllers
             {
                 return StatusCode(500, $"Error al guardar cambios: {ex.Message}");
             }
+        }
+
+            [HttpPost("importar-excel")]
+            public async Task<IActionResult> ImportarExcel(IFormFile file)
+            {
+                if (file == null || file.Length == 0)
+                    return BadRequest("Debes subir un archivo Excel válido.");
+
+                var equipos = new List<Equipo>();
+
+                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+                using (var stream = file.OpenReadStream())
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    var result = reader.AsDataSet();
+                    var table = result.Tables[0];
+
+                    for (int i = 1; i < table.Rows.Count; i++)
+                    {
+                        var row = table.Rows[i];
+
+                        var equipo = new Equipo
+                        {
+                            OrdenCompra = row[0]?.ToString(),
+                            Factura = row[1]?.ToString(),
+                            Proveedor = row[2]?.ToString(),
+                            FechaIngreso = DateTime.TryParse(row[3]?.ToString(), out var fi) ? fi : DateTime.Now,
+                            HojaNo = row[4]?.ToString(),
+                            FechaActualizacion = DateTime.TryParse(row[5]?.ToString(), out var fa) ? fa : DateTime.Now,
+                            Codificacion = row[6]?.ToString(),
+                            TipoEquipo = row[7]?.ToString(), 
+                            Marca = row[8]?.ToString(),
+                            Modelo = row[9]?.ToString(),
+                            Serie = row[10]?.ToString(),
+                            Extension = row[11]?.ToString(),
+                            Ubicacion = row[12]?.ToString(),
+                            ResponsableAnterior = row[13]?.ToString(),
+                            Comentarios = row[14]?.ToString(),
+                            Observaciones = row[15]?.ToString()
+                        };
+
+                        equipos.Add(equipo);
+                    }
+                }
+
+                await _context.Equipos.AddRangeAsync(equipos);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { mensaje = $"{equipos.Count} equipos importados correctamente." });
+            }
+
+        [HttpDelete("EliminarTodos")]
+        public async Task<IActionResult> EliminarTodosEquipos()
+        {
+            var equipos = _context.Equipos;
+            _context.Equipos.RemoveRange(equipos);
+            await _context.SaveChangesAsync();
+            return Ok(new { mensaje = "Todos los equipos fueron eliminados." });
         }
 
     }

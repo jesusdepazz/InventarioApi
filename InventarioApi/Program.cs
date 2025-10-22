@@ -20,16 +20,38 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuer = true
         };
     });
+<<<<<<< HEAD
+=======
+
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+    options.JsonSerializerOptions.MaxDepth = 64;
+});
+>>>>>>> jesusdepazz
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("react", policy =>
     {
+<<<<<<< HEAD
         policy.WithOrigins("https://inventory.guandy.com")
+=======
+        policy.WithOrigins("https://inventory-test.guandy.com")
+>>>>>>> jesusdepazz
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
     });
+<<<<<<< HEAD
+=======
+});
+
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+>>>>>>> jesusdepazz
 });
 
 builder.Services.AddControllers();
