@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace InventarioApi.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstMigration : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -27,6 +27,24 @@ namespace InventarioApi.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Asignaciones", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BajaActivos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FechaBaja = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CodificacionEquipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MotivoBaja = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DetallesBaja = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UbicacionActual = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UbicacionDestino = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BajaActivos", x => x.Id);
                 });
 
 
@@ -58,26 +76,6 @@ namespace InventarioApi.Migrations
                     table.PrimaryKey("PK_Equipos", x => x.Id);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "HojasResponsabilidad",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    HojaNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Motivo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Comentarios = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Estado = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SolvenciaNo = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FechaSolvencia = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Observaciones = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Accesorios = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_HojasResponsabilidad", x => x.Id);
-                });
 
             migrationBuilder.CreateTable(
                 name: "Mantenimientos",
@@ -140,6 +138,28 @@ namespace InventarioApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TrasladoRetornos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    No = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaPase = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Solicitante = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Equipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DescripcionEquipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MotivoSalida = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UbivacionRetorno = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaRetorno = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RazonNoLiquidada = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TrasladoRetornos", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Traslados",
                 columns: table => new
                 {
@@ -187,6 +207,7 @@ namespace InventarioApi.Migrations
                 {
                     table.PrimaryKey("PK_Usuarios", x => x.Id);
                 });
+
 
             migrationBuilder.CreateTable(
                 name: "HojaEmpleados",
@@ -331,16 +352,6 @@ namespace InventarioApi.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_HojaEmpleados_HojaResponsabilidadId",
-                table: "HojaEmpleados",
-                column: "HojaResponsabilidadId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_HojaEquipos_HojaResponsabilidadId",
-                table: "HojaEquipos",
-                column: "HojaResponsabilidadId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_InventarioSuministros_SuministroId",
                 table: "InventarioSuministros",
                 column: "SuministroId");
@@ -377,6 +388,11 @@ namespace InventarioApi.Migrations
             migrationBuilder.DropTable(
                 name: "Asignaciones");
 
+            migrationBuilder.DropTable(
+                name: "BajaActivos");
+
+            migrationBuilder.DropTable(
+                name: "Equipos");
 
             migrationBuilder.DropTable(
                 name: "HojaEmpleados");
@@ -400,6 +416,9 @@ namespace InventarioApi.Migrations
                 name: "Solvencias");
 
             migrationBuilder.DropTable(
+                name: "TrasladoRetornos");
+
+            migrationBuilder.DropTable(
                 name: "Traslados");
 
             migrationBuilder.DropTable(
@@ -410,9 +429,6 @@ namespace InventarioApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "Ubicaciones");
-
-            migrationBuilder.DropTable(
-                name: "HojasResponsabilidad");
         }
     }
 }
