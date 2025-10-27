@@ -25,6 +25,7 @@ namespace Inventory.Data
         public DbSet<InventarioSuministro> InventarioSuministros { get; set; }
         public DbSet<MovimientoSuministro> MovimientoSuministros { get; set; }
         public DbSet<BajaActivo> BajaActivos { get; set; }
+        public DbSet<TrasladoRetorno> TrasladoRetornos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
