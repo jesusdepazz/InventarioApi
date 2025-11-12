@@ -43,11 +43,23 @@ namespace InventarioApi.Controllers
             if (await _context.Traslados.AnyAsync(t => t.No == nuevoTraslado.No))
                 return Conflict("Ya existe un traslado con ese número.");
 
+            var equipo = await _context.Equipos
+                .FirstOrDefaultAsync(e => e.Codificacion == nuevoTraslado.Equipo);
+
+            if (equipo == null)
+                return NotFound($"No se encontró el equipo con codificación {nuevoTraslado.Equipo}");
+
+            equipo.Ubicacion = nuevoTraslado.UbicacionHasta;
+
+            equipo.FechaActualizacion = DateTime.UtcNow;
+
             _context.Traslados.Add(nuevoTraslado);
+
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetByNo), new { no = nuevoTraslado.No }, nuevoTraslado);
         }
+
 
         [HttpPut("{no}")]
         public async Task<IActionResult> Update(string no, [FromBody] Traslado updatedTraslado)

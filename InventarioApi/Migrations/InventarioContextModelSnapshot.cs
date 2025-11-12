@@ -202,7 +202,7 @@ namespace InventarioApi.Migrations
                     b.Property<DateTime>("FechaBaja")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("MotivoBaja")
+                    b.PrimitiveCollection<string>("MotivoBaja")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -664,6 +664,9 @@ namespace InventarioApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Comentarios")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Estado")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Extension")
