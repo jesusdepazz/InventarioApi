@@ -50,6 +50,30 @@ namespace InventarioApi.Controllers
 
             hojaResp.Estado = "Inactiva";
 
+            var codificaciones = hojaResp.Equipos.Select(e => e.Codificacion).ToList();
+
+            foreach (var cod in codificaciones)
+            {
+                var equipoInv = await _context.Equipos.FirstOrDefaultAsync(e => e.Codificacion == cod);
+                if (equipoInv != null)
+                {
+                    var ultimaAsignacion = await _context.Asignaciones
+                        .Where(a => a.CodificacionEquipo == equipoInv.Codificacion)
+                        .OrderByDescending(a => a.Id)
+                        .FirstOrDefaultAsync();
+
+                    equipoInv.ResponsableAnterior = ultimaAsignacion?.NombreEmpleado ?? "Ninguno";
+
+                    var asignacionesEquipo = _context.Asignaciones
+                        .Where(a => a.CodificacionEquipo == equipoInv.Codificacion);
+
+                    _context.Asignaciones.RemoveRange(asignacionesEquipo);
+
+                    equipoInv.Ubicacion = "Stock";
+                    equipoInv.FechaActualizacion = DateTime.Now;
+                }
+            }
+
             await _context.SaveChangesAsync();
 
             return Ok(solvencia);
