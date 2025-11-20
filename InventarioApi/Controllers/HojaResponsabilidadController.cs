@@ -61,6 +61,7 @@ public class HojasResponsabilidadController : ControllerBase
                 TipoEquipo = eq.TipoEquipo,
                 Ubicacion = eq.Ubicacion,
                 FechaIngreso = eq.FechaIngreso,
+                Estado = eq.Estado,
             }).ToList()
         };
 

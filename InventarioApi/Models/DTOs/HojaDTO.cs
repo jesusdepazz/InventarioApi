@@ -15,6 +15,7 @@ public class HojaEquipoDTO
     public string TipoEquipo { get; set; }
     public string Ubicacion { get; set; }
     public string FechaIngreso { get; set; }
+    public string Estado { get; set; }
 }
 
 public class HojaResponsabilidadDTO

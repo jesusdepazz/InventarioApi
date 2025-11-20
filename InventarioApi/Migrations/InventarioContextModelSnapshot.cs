@@ -68,6 +68,10 @@ namespace InventarioApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FechaIngreso")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -202,7 +206,7 @@ namespace InventarioApi.Migrations
                     b.Property<DateTime>("FechaBaja")
                         .HasColumnType("datetime2");
 
-                    b.PrimitiveCollection<string>("MotivoBaja")
+                    b.Property<string>("MotivoBaja")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -309,32 +313,6 @@ namespace InventarioApi.Migrations
                     b.ToTable("Solvencias");
                 });
 
-            modelBuilder.Entity("InventarioApi.Models.InventarioSuministro", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Cantidad")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SuministroId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UbicacionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SuministroId");
-
-                    b.HasIndex("UbicacionId");
-
-                    b.ToTable("InventarioSuministros");
-                });
-
             modelBuilder.Entity("InventarioApi.Models.Mantenimiento", b =>
                 {
                     b.Property<int>("Id")
@@ -369,50 +347,6 @@ namespace InventarioApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Mantenimientos");
-                });
-
-            modelBuilder.Entity("InventarioApi.Models.MovimientoSuministro", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Cantidad")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("FechaMovimiento")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Observacion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RealizadoPor")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SuministroId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TipoMovimiento")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("UbicacionDestinoId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UbicacionOrigenId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SuministroId");
-
-                    b.HasIndex("UbicacionDestinoId");
-
-                    b.HasIndex("UbicacionOrigenId");
-
-                    b.ToTable("MovimientoSuministros");
                 });
 
             modelBuilder.Entity("InventarioApi.Models.Solicitud", b =>
@@ -480,7 +414,7 @@ namespace InventarioApi.Migrations
                     b.ToTable("Solicitudes");
                 });
 
-            modelBuilder.Entity("InventarioApi.Models.Suministro", b =>
+            modelBuilder.Entity("InventarioApi.Models.Suministros.EntradaSuministro", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -488,20 +422,66 @@ namespace InventarioApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
+                    b.Property<int>("CantidadProducto")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Descripcion")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("Nombre")
+                    b.Property<int>("SuministroId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SuministroId");
+
+                    b.ToTable("EntradaSuministros");
+                });
+
+            modelBuilder.Entity("InventarioApi.Models.Suministros.SalidaSuministro", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CantidadProducto")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("SuministroId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SuministroId");
+
+                    b.ToTable("SalidaSuministros");
+                });
+
+            modelBuilder.Entity("InventarioApi.Models.Suministros.Suministro", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CantidadActual")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StockTotal")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("UnidadMedida")
+                    b.Property<string>("NombreProducto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UbicacionProducto")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -760,48 +740,26 @@ namespace InventarioApi.Migrations
                     b.Navigation("HojaResponsabilidad");
                 });
 
-            modelBuilder.Entity("InventarioApi.Models.InventarioSuministro", b =>
+            modelBuilder.Entity("InventarioApi.Models.Suministros.EntradaSuministro", b =>
                 {
-                    b.HasOne("InventarioApi.Models.Suministro", "Suministro")
-                        .WithMany("Inventarios")
+                    b.HasOne("InventarioApi.Models.Suministros.Suministro", "Suministro")
+                        .WithMany("Entradas")
                         .HasForeignKey("SuministroId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Inventory.Models.Ubicacion", "Ubicacion")
-                        .WithMany("Inventarios")
-                        .HasForeignKey("UbicacionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Suministro");
-
-                    b.Navigation("Ubicacion");
                 });
 
-            modelBuilder.Entity("InventarioApi.Models.MovimientoSuministro", b =>
+            modelBuilder.Entity("InventarioApi.Models.Suministros.SalidaSuministro", b =>
                 {
-                    b.HasOne("InventarioApi.Models.Suministro", "Suministro")
-                        .WithMany("Movimientos")
+                    b.HasOne("InventarioApi.Models.Suministros.Suministro", "Suministro")
+                        .WithMany("Salidas")
                         .HasForeignKey("SuministroId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Inventory.Models.Ubicacion", "UbicacionDestino")
-                        .WithMany("MovimientosDestino")
-                        .HasForeignKey("UbicacionDestinoId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Inventory.Models.Ubicacion", "UbicacionOrigen")
-                        .WithMany("MovimientosOrigen")
-                        .HasForeignKey("UbicacionOrigenId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.Navigation("Suministro");
-
-                    b.Navigation("UbicacionDestino");
-
-                    b.Navigation("UbicacionOrigen");
                 });
 
             modelBuilder.Entity("HojaResponsabilidad", b =>
@@ -818,20 +776,11 @@ namespace InventarioApi.Migrations
                     b.Navigation("Empleados");
                 });
 
-            modelBuilder.Entity("InventarioApi.Models.Suministro", b =>
+            modelBuilder.Entity("InventarioApi.Models.Suministros.Suministro", b =>
                 {
-                    b.Navigation("Inventarios");
+                    b.Navigation("Entradas");
 
-                    b.Navigation("Movimientos");
-                });
-
-            modelBuilder.Entity("Inventory.Models.Ubicacion", b =>
-                {
-                    b.Navigation("Inventarios");
-
-                    b.Navigation("MovimientosDestino");
-
-                    b.Navigation("MovimientosOrigen");
+                    b.Navigation("Salidas");
                 });
 #pragma warning restore 612, 618
         }
