@@ -36,5 +36,26 @@ namespace Inventory.Controllers
             return Ok(empleado);
         }
 
+        [HttpGet("buscar")]
+        public async Task<ActionResult<IEnumerable<object>>> BuscarEmpleados([FromQuery] string nombre)
+        {
+            if (string.IsNullOrWhiteSpace(nombre))
+                return Ok(new List<object>());
+
+            var empleados = await _context.EmpleadosInfo
+                .Include(e => e.DepartamentoInfo)
+                .Where(e => e.Nombre.Contains(nombre))
+                .Select(e => new
+                {
+                    codigoEmpleado = e.Empleado,
+                    nombre = e.Nombre,
+                    puesto = e.Puesto,
+                    departamento = e.DepartamentoInfo.Descripcion
+                })
+                .ToListAsync();
+
+            return Ok(empleados);
+        }
+
     }
 }

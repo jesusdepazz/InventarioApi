@@ -7,10 +7,10 @@ namespace InventarioApi.Models.Suministros
         public int Id { get; set; }
         public string NombreProducto { get; set; }
         public string UbicacionProducto { get; set; }
-        public string CantidadActual { get; set; }
-        public DateTime DateTime { get; set; }
-        public List<EntradaSuministro> Entradas { get; set; }
-        public List<SalidaSuministro> Salidas { get; set; }
+        public int CantidadActual { get; set; }
+        public DateTime DateTime { get; set; } = DateTime.Now;
+        public List<EntradaSuministro> Entradas { get; set; } = new();
+        public List<SalidaSuministro> Salidas { get; set; } = new();
 
     }
 

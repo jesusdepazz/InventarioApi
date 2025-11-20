@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace InventarioApi.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class FirstMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -46,6 +46,7 @@ namespace InventarioApi.Migrations
                 {
                     table.PrimaryKey("PK_BajaActivos", x => x.Id);
                 });
+
 
             migrationBuilder.CreateTable(
                 name: "Equipos",
@@ -345,7 +346,6 @@ namespace InventarioApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
             migrationBuilder.CreateIndex(
                 name: "IX_EntradaSuministros_SuministroId",
                 table: "EntradaSuministros",
