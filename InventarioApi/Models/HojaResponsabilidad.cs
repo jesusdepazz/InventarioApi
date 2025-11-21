@@ -40,9 +40,9 @@ public class HojaEquipo
     public string Modelo { get; set; }
     public string Serie { get; set; }
     public string TipoEquipo { get; set; }
-    public string Estado { get; set; }
     public string Ubicacion { get; set; }
     public string FechaIngreso { get; set; }
+    public string Estado { get; set; }
 
     [JsonIgnore]
     public HojaResponsabilidad HojaResponsabilidad { get; set; }

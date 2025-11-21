@@ -12,13 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventarioApi.Migrations
 {
     [DbContext(typeof(InventarioContext))]
-<<<<<<<< HEAD:InventarioApi/Migrations/20251022214252_Merge.Designer.cs
-    [Migration("20251022214252_Merge")]
-    partial class Merge
-========
-    [Migration("20251120201947_Update-Database ")]
-    partial class UpdateDatabase
->>>>>>>> local:InventarioApi/Migrations/20251120201947_Update-Database .Designer.cs
+    [Migration("20251120204153_Update-Campo-SuministosID")]
+    partial class UpdateCampoSuministosID
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -12,11 +12,10 @@ public class HojaEquipoDTO
     public string Marca { get; set; }
     public string Modelo { get; set; }
     public string Serie { get; set; }
-    public string Tipo { get; set; }
     public string TipoEquipo { get; set; }
-    public string Estado { get; set; }
     public string Ubicacion { get; set; }
     public string FechaIngreso { get; set; }
+    public string Estado { get; set; }
 }
 
 public class HojaResponsabilidadDTO

@@ -12,13 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventarioApi.Migrations
 {
     [DbContext(typeof(InventarioContext))]
-<<<<<<<< HEAD:InventarioApi/Migrations/20251022214252_Merge.Designer.cs
-    [Migration("20251022214252_Merge")]
-    partial class Merge
-========
-    [Migration("20251120201947_Update-Database ")]
-    partial class UpdateDatabase
->>>>>>>> local:InventarioApi/Migrations/20251120201947_Update-Database .Designer.cs
+    [Migration("20251120181142_First-Migration")]
+    partial class FirstMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -478,8 +473,9 @@ namespace InventarioApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CantidadActual")
-                        .HasColumnType("int");
+                    b.Property<string>("CantidadActual")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");

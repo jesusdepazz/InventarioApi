@@ -103,5 +103,31 @@ namespace Inventory.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
+
+        [HttpDelete("eliminar-todas")]
+        public async Task<IActionResult> EliminarTodasLasUbicaciones([FromQuery] bool confirm = false)
+        {
+            if (!confirm)
+            {
+                return BadRequest("Debes confirmar la eliminación agregando ?confirm=true");
+            }
+
+            var ubicaciones = await _context.Ubicaciones.ToListAsync();
+
+            if (!ubicaciones.Any())
+            {
+                return NotFound("No hay ubicaciones para eliminar.");
+            }
+
+            _context.Ubicaciones.RemoveRange(ubicaciones);
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                mensaje = "Se eliminaron todas las ubicaciones correctamente.",
+                totalEliminadas = ubicaciones.Count
+            });
+        }
+
     }
 }

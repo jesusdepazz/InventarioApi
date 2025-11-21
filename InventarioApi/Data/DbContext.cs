@@ -1,4 +1,5 @@
 ﻿using InventarioApi.Models;
+using InventarioApi.Models.Suministros;
 using Inventory.Models;
 using InventoryApi.Models;
 using Microsoft.EntityFrameworkCore;
@@ -22,9 +23,10 @@ namespace Inventory.Data
         public DbSet<HojaEquipo> HojaEquipos { get; set; }
         public DbSet<Traslado> Traslados { get; set; }
         public DbSet<Suministro> Suministros { get; set; }
-        public DbSet<InventarioSuministro> InventarioSuministros { get; set; }
-        public DbSet<MovimientoSuministro> MovimientoSuministros { get; set; }
+        public DbSet<EntradaSuministro> EntradaSuministros { get; set; }
+        public DbSet<SalidaSuministro> SalidaSuministros { get; set; }
         public DbSet<BajaActivo> BajaActivos { get; set; }
+        public DbSet<TrasladoRetorno> TrasladoRetornos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -61,17 +63,17 @@ namespace Inventory.Data
             .WithMany(h => h.Solvencias)
             .HasForeignKey(s => s.HojaResponsabilidadId);
 
-            modelBuilder.Entity<MovimientoSuministro>()
-                .HasOne(m => m.UbicacionOrigen)
-                .WithMany(u => u.MovimientosOrigen)
-                .HasForeignKey(m => m.UbicacionOrigenId)
-                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Suministro>()
+                .HasMany(s => s.Entradas)
+                .WithOne(e => e.Suministro)
+                .HasForeignKey(e => e.SuministroId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<MovimientoSuministro>()
-                .HasOne(m => m.UbicacionDestino)
-                .WithMany(u => u.MovimientosDestino)
-                .HasForeignKey(m => m.UbicacionDestinoId)
-                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Suministro>()
+                .HasMany(s => s.Salidas)
+                .WithOne(sal => sal.Suministro)
+                .HasForeignKey(sal => sal.SuministroId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
