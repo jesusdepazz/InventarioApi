@@ -4,6 +4,7 @@ using Inventory.Data;
 using InventarioApi.Models.Suministros;
 using ExcelDataReader;
 using System.Text;
+using OfficeOpenXml;
 
 namespace InventarioApi.Controllers
 {
@@ -180,5 +181,104 @@ namespace InventarioApi.Controllers
             return Ok(new { mensaje = "Todos los suministros y sus movimientos fueron eliminados. ID reiniciado a 0." });
         }
 
+        [HttpGet("con-totales")]
+        public async Task<ActionResult<IEnumerable<object>>> GetSuministrosConTotales()
+        {
+            var data = await _context.Suministros
+                .Select(s => new {
+                    s.Id,
+                    s.NombreProducto,
+                    TotalEntradas = _context.EntradaSuministros
+                                           .Where(e => e.SuministroId == s.Id)
+                                           .Sum(e => (int?)e.CantidadProducto) ?? 0,
+                    TotalSalidas = _context.SalidaSuministros
+                                           .Where(sa => sa.SuministroId == s.Id)
+                                           .Sum(sa => (int?)sa.CantidadProducto) ?? 0,
+                    ExistenciaActual = s.CantidadActual
+                })
+                .ToListAsync();
+
+            return Ok(data);
+        }
+
+        [HttpGet("exportar-excel")]
+        public async Task<IActionResult> ExportarExcel()
+        {
+            var suministros = await _context.Suministros.ToListAsync();
+            var entradas = await _context.EntradaSuministros
+                .Include(e => e.Suministro)
+                .ToListAsync();
+            var salidas = await _context.SalidaSuministros
+                .Include(s => s.Suministro)
+                .ToListAsync();
+
+            using var package = new OfficeOpenXml.ExcelPackage();
+
+            var ws1 = package.Workbook.Worksheets.Add("Suministros");
+            ws1.Cells[1, 1].Value = "ID";
+            ws1.Cells[1, 2].Value = "Producto";
+            ws1.Cells[1, 3].Value = "Ubicación";
+            ws1.Cells[1, 4].Value = "Cantidad Actual";
+
+            int row = 2;
+            foreach (var s in suministros)
+            {
+                ws1.Cells[row, 1].Value = s.Id;
+                ws1.Cells[row, 2].Value = s.NombreProducto;
+                ws1.Cells[row, 3].Value = s.UbicacionProducto;
+                ws1.Cells[row, 4].Value = s.CantidadActual;
+                row++;
+            }
+
+            var ws2 = package.Workbook.Worksheets.Add("Entradas");
+            ws2.Cells[1, 1].Value = "ID";
+            ws2.Cells[1, 2].Value = "Producto";
+            ws2.Cells[1, 3].Value = "Cantidad";
+            ws2.Cells[1, 4].Value = "Fecha";
+
+            row = 2;
+            foreach (var e in entradas)
+            {
+                ws2.Cells[row, 1].Value = e.Id;
+                ws2.Cells[row, 2].Value = e.Suministro?.NombreProducto;
+                ws2.Cells[row, 3].Value = e.CantidadProducto;
+                ws2.Cells[row, 4].Value = e.Fecha.ToString("dd/MM/yyyy");
+                row++;
+            }
+
+            var ws3 = package.Workbook.Worksheets.Add("Salidas");
+            ws3.Cells[1, 1].Value = "ID";
+            ws3.Cells[1, 2].Value = "Producto";
+            ws3.Cells[1, 3].Value = "Cantidad";
+            ws3.Cells[1, 4].Value = "Destino";
+            ws3.Cells[1, 5].Value = "Responsable";
+            ws3.Cells[1, 6].Value = "Departamento";
+            ws3.Cells[1, 7].Value = "Fecha";
+
+            row = 2;
+            foreach (var s in salidas)
+            {
+                ws3.Cells[row, 1].Value = s.Id;
+                ws3.Cells[row, 2].Value = s.Suministro?.NombreProducto;
+                ws3.Cells[row, 3].Value = s.CantidadProducto;
+                ws3.Cells[row, 4].Value = s.Destino;
+                ws3.Cells[row, 5].Value = s.PersonaResponsable;
+                ws3.Cells[row, 6].Value = s.DepartamentoResponsable;
+                ws3.Cells[row, 7].Value = s.Fecha.ToString("dd/MM/yyyy");
+                row++;
+            }
+
+            ws1.Cells.AutoFitColumns();
+            ws2.Cells.AutoFitColumns();
+            ws3.Cells.AutoFitColumns();
+
+            var excelBytes = package.GetAsByteArray();
+
+            return File(
+                excelBytes,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "InventarioSuministros.xlsx"
+            );
+        }
     }
 }
