@@ -2,9 +2,6 @@ using Inventory.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using OfficeOpenXml;
-
-ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +29,6 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 builder.Services.AddCors(options =>
 {
-
     options.AddPolicy("React-Allow", policy =>
     {
         policy.WithOrigins("https://inventory.guandy.com")
@@ -40,6 +36,7 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod()
               .AllowCredentials();
     });
+});
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
@@ -62,7 +59,6 @@ app.UseSwaggerUI(c =>
 
 
 app.UseHttpsRedirection();
-
 
 app.UseCors("React-Allow");
 

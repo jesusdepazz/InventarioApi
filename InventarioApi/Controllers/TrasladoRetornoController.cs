@@ -16,14 +16,12 @@ namespace InventarioApi.Controllers
             _context = context;
         }
 
-        // GET: api/TrasladoRetornos
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TrasladoRetorno>>> GetTrasladoRetornos()
         {
             return await _context.TrasladoRetornos.ToListAsync();
         }
 
-        // GET: api/TrasladoRetornos/5
         [HttpGet("{id}")]
         public async Task<ActionResult<TrasladoRetorno>> GetTrasladoRetorno(int id)
         {
