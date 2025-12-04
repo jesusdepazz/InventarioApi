@@ -261,7 +261,6 @@ namespace InventarioApi.Controllers
                 ws3.Cells[row, 1].Value = s.Id;
                 ws3.Cells[row, 2].Value = s.Suministro?.NombreProducto;
                 ws3.Cells[row, 3].Value = s.CantidadProducto;
-                ws3.Cells[row, 4].Value = s.Destino;
                 ws3.Cells[row, 5].Value = s.PersonaResponsable;
                 ws3.Cells[row, 6].Value = s.DepartamentoResponsable;
                 ws3.Cells[row, 7].Value = s.Fecha.ToString("dd/MM/yyyy");

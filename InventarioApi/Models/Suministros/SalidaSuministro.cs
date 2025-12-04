@@ -11,7 +11,6 @@ namespace InventarioApi.Models.Suministros
         public Suministro? Suministro { get; set; }
 
         public int CantidadProducto { get; set; }
-        public string Destino { get; set; }
         public string PersonaResponsable { get; set; }
         public string DepartamentoResponsable { get; set; }
         public DateTime Fecha { get; set; }
