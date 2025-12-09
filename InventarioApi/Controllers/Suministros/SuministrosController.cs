@@ -250,10 +250,9 @@ namespace InventarioApi.Controllers
             ws3.Cells[1, 1].Value = "ID";
             ws3.Cells[1, 2].Value = "Producto";
             ws3.Cells[1, 3].Value = "Cantidad";
-            ws3.Cells[1, 4].Value = "Destino";
-            ws3.Cells[1, 5].Value = "Responsable";
-            ws3.Cells[1, 6].Value = "Departamento";
-            ws3.Cells[1, 7].Value = "Fecha";
+            ws3.Cells[1, 4].Value = "Responsable";
+            ws3.Cells[1, 5].Value = "Departamento";
+            ws3.Cells[1, 6].Value = "Fecha";
 
             row = 2;
             foreach (var s in salidas)
