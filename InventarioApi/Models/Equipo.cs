@@ -21,7 +21,7 @@ namespace InventoryApi.Models
         public string? ResponsableAnterior { get; set; }
         public string? Comentarios { get; set; }
         public string? Observaciones { get; set; }
-        public string? Estado { get; set; }
+        public string Estado { get; set; }
     }
 
 }

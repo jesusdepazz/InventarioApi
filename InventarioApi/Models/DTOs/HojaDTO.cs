@@ -29,7 +29,7 @@ public class HojaResponsabilidadDTO
     public DateTime FechaCreacion { get; set; } = DateTime.Now;
     public string Observaciones { get; set; }
     public string Accesorios { get; set; }
-
+    public string JefeInmediato { get; set; }
     public List<HojaEmpleadoDTO> Empleados { get; set; } = new();
     public List<HojaEquipoDTO> Equipos { get; set; } = new();
 }

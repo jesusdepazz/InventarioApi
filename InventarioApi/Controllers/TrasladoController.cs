@@ -72,8 +72,8 @@ namespace InventarioApi.Controllers
                 return NotFound();
 
             traslado.FechaEmision = updatedTraslado.FechaEmision;
-            traslado.PersonaEntrega = updatedTraslado.PersonaEntrega;
-            traslado.PersonaRecibe = updatedTraslado.PersonaEntrega;
+            traslado.CodigoEntrega = updatedTraslado.CodigoEntrega;
+            traslado.CodigoRecibe = updatedTraslado.CodigoEntrega;
             traslado.Motivo = updatedTraslado.Motivo;
             traslado.UbicacionDesde = updatedTraslado.UbicacionDesde;
             traslado.UbicacionHasta = updatedTraslado.UbicacionHasta;

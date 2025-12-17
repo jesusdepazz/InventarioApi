@@ -34,6 +34,7 @@ namespace InventoryApi.Controllers
                     e.FechaActualizacion,
                     e.ResponsableAnterior,
                     e.Codificacion,
+                    e.Estado,
                     e.TipoEquipo,
                     e.Marca,
                     e.Modelo,
@@ -84,7 +85,8 @@ namespace InventoryApi.Controllers
                     modelo = e.Modelo,
                     serie = e.Serie,
                     tipoEquipo = e.TipoEquipo,
-                    ubicacion = e.Ubicacion
+                    ubicacion = e.Ubicacion,
+                    estado = e.Estado
                 })
                 .FirstOrDefaultAsync();
 
@@ -120,6 +122,7 @@ namespace InventoryApi.Controllers
                 FechaActualizacion = dto.FechaActualizacion,
                 ResponsableAnterior = dto.ResponsableAnterior,
                 Codificacion = dto.Codificacion,
+                Estado = dto.Estado,
                 TipoEquipo = dto.TipoEquipo,
                 Marca = dto.Marca,
                 Modelo = dto.Modelo,
@@ -206,15 +209,16 @@ namespace InventoryApi.Controllers
                             HojaNo = row[4]?.ToString(),
                             FechaActualizacion = DateTime.TryParse(row[5]?.ToString(), out var fa) ? fa : DateTime.Now,
                             Codificacion = row[6]?.ToString(),
-                            TipoEquipo = row[7]?.ToString(), 
-                            Marca = row[8]?.ToString(),
-                            Modelo = row[9]?.ToString(),
-                            Serie = row[10]?.ToString(),
-                            Extension = row[11]?.ToString(),
-                            Ubicacion = row[12]?.ToString(),
-                            ResponsableAnterior = row[13]?.ToString(),
-                            Comentarios = row[14]?.ToString(),
-                            Observaciones = row[15]?.ToString()
+                            Estado = row[7]?.ToString(),
+                            TipoEquipo = row[8]?.ToString(), 
+                            Marca = row[9]?.ToString(),
+                            Modelo = row[10]?.ToString(),
+                            Serie = row[11]?.ToString(),
+                            Extension = row[12]?.ToString(),
+                            Ubicacion = row[13]?.ToString(),
+                            ResponsableAnterior = row[14]?.ToString(),
+                            Comentarios = row[15]?.ToString(),
+                            Observaciones = row[16]?.ToString()
                         };
 
                         equipos.Add(equipo);
