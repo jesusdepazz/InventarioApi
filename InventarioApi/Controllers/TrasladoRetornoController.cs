@@ -32,19 +32,37 @@ namespace InventarioApi.Controllers
 
             return traslado;
         }
+
         [HttpPost]
-        public async Task<ActionResult<TrasladoRetorno>> PostTrasladoRetorno(TrasladoRetorno traslado)
+        public async Task<IActionResult> PostTrasladoRetorno(TrasladoRetorno traslado)
         {
+            var equipoExiste = await _context.Equipos
+                .AnyAsync(e => e.Codificacion == traslado.Equipo);
+
+            if (!equipoExiste)
+                return BadRequest("La codificación del equipo no existe.");
+
             _context.TrasladoRetornos.Add(traslado);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetTrasladoRetorno), new { id = traslado.Id }, traslado);
+            return CreatedAtAction(
+                nameof(GetTrasladoRetorno),
+                new { id = traslado.Id },
+                traslado
+            );
         }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTrasladoRetorno(int id, TrasladoRetorno traslado)
         {
             if (id != traslado.Id)
                 return BadRequest("El ID del traslado no coincide.");
+
+            var equipoExiste = await _context.Equipos
+                .AnyAsync(e => e.Codificacion == traslado.Equipo);
+
+            if (!equipoExiste)
+                return BadRequest("La codificación del equipo no existe.");
 
             _context.Entry(traslado).State = EntityState.Modified;
 
@@ -67,6 +85,7 @@ namespace InventarioApi.Controllers
         public async Task<IActionResult> DeleteTrasladoRetorno(int id)
         {
             var traslado = await _context.TrasladoRetornos.FindAsync(id);
+
             if (traslado == null)
                 return NotFound();
 
