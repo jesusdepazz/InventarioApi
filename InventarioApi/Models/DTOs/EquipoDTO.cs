@@ -5,9 +5,9 @@ public class EquipoDTO
     public string? OrdenCompra { get; set; }
     public string? Factura { get; set; }
     public string? Proveedor { get; set; }
-    public DateTime FechaIngreso { get; set; }
+    public DateTime? FechaIngreso { get; set; }
     public string? HojaNo { get; set; }
-    public DateTime FechaActualizacion { get; set; }
+    public DateTime? FechaActualizacion { get; set; }
     public string? Codificacion { get; set; }
     public string? TipoEquipo { get; set; }
     public string? Marca { get; set; }
