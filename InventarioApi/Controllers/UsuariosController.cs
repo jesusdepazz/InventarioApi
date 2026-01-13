@@ -49,5 +49,21 @@ namespace InventarioApi.Controllers
 
             return Ok(new { message = "Rol actualizado con éxito.", usuario });
         }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> EliminarUsuario(int id)
+        {
+            var usuario = await _context.Usuarios.FindAsync(id);
+
+            if (usuario == null)
+                return NotFound("Usuario no encontrado.");
+
+            _context.Usuarios.Remove(usuario);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Usuario eliminado con éxito." });
+        }
+
     }
-}
+}                                                                                                                                                                                                                                                                                                          
+ 
