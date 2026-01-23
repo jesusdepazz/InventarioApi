@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventarioApi.Migrations
 {
     [DbContext(typeof(InventarioContext))]
-    [Migration("20251120220038_Add-Campo-Salida-Suministro")]
-    partial class AddCampoSalidaSuministro
+    [Migration("20251121182446_Agregando-Suministros")]
+    partial class AgregandoSuministros
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

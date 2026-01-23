@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace InventarioApi.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstMigration : Migration
+    public partial class AgregandoSuministros : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -46,7 +46,6 @@ namespace InventarioApi.Migrations
                 {
                     table.PrimaryKey("PK_BajaActivos", x => x.Id);
                 });
-
 
             migrationBuilder.CreateTable(
                 name: "Equipos",
@@ -149,7 +148,7 @@ namespace InventarioApi.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     NombreProducto = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UbicacionProducto = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CantidadActual = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CantidadActual = table.Column<int>(type: "int", nullable: false),
                     DateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -334,6 +333,9 @@ namespace InventarioApi.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SuministroId = table.Column<int>(type: "int", nullable: false),
                     CantidadProducto = table.Column<int>(type: "int", nullable: false),
+                    Destino = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PersonaResponsable = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DepartamentoResponsable = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Fecha = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -346,6 +348,7 @@ namespace InventarioApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
             migrationBuilder.CreateIndex(
                 name: "IX_EntradaSuministros_SuministroId",
                 table: "EntradaSuministros",

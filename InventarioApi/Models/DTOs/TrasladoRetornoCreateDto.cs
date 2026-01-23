@@ -1,6 +1,5 @@
-﻿public class TrasladoRetorno
+﻿public class TrasladoRetornoCreateDto
 {
-    public int Id { get; set; }
     public string No { get; set; }
     public DateTime FechaPase { get; set; }
     public string Solicitante { get; set; }
@@ -9,5 +8,5 @@
     public string Status { get; set; }
     public string RazonNoLiquidada { get; set; }
 
-    public ICollection<TrasladoRetornoDetalle> Detalles { get; set; }
+    public List<TrasladoRetornoDetalleDto> Equipos { get; set; }
 }
