@@ -72,8 +72,10 @@ namespace InventoryApi.Controllers
             return equipo;
         }
 
-        [HttpGet("por-codificacion/{codificacion}")]
-        public async Task<IActionResult> ObtenerPorCodificacion(string codificacion)
+        [HttpGet("por-codificacion")]
+        public async Task<IActionResult> ObtenerPorCodificacion(
+            [FromQuery] string codificacion
+        )
         {
             var equipo = await _context.Equipos
                 .Where(e => e.Codificacion == codificacion)
@@ -96,6 +98,7 @@ namespace InventoryApi.Controllers
 
             return Ok(equipo);
         }
+
 
         [HttpPost]
         public async Task<ActionResult<Equipo>> PostEquipo([FromForm] EquipoDTO dto)
