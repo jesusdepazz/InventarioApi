@@ -72,26 +72,29 @@ namespace InventoryApi.Controllers
             return equipo;
         }
 
-        [HttpGet("por-codificacion/{codificacion}")]
-        public async Task<IActionResult> GetEquipoPorCodificacion(string codificacion)
+        [HttpGet("por-codificacion")]
+        public async Task<IActionResult> ObtenerPorCodificacion(
+            [FromQuery] string codificacion
+        )
         {
             var equipo = await _context.Equipos
                 .Where(e => e.Codificacion == codificacion)
-                .Select(e => new
-                {   
-                    fechaIngreso = e.FechaIngreso,
-                    codificacion = e.Codificacion,
-                    marca = e.Marca,
-                    modelo = e.Modelo,
-                    serie = e.Serie,
-                    tipoEquipo = e.TipoEquipo,
-                    ubicacion = e.Ubicacion,
-                    estado = e.Estado
+                .Select(e => new EquipoDTO
+                {
+                    Id = e.Id,
+                    Codificacion = e.Codificacion,
+                    Marca = e.Marca,
+                    Modelo = e.Modelo,
+                    Serie = e.Serie,
+                    Ubicacion = e.Ubicacion,
+                    Estado = e.Estado,
+                    TipoEquipo = e.TipoEquipo,
+                    FechaIngreso = e.FechaIngreso
                 })
                 .FirstOrDefaultAsync();
 
             if (equipo == null)
-                return NotFound();
+                return NotFound("Equipo no encontrado");
 
             return Ok(equipo);
         }
@@ -156,31 +159,27 @@ namespace InventoryApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditarEquipo(int id, [FromForm] EquipoDTO dto)
+        public async Task<IActionResult> EditarEquipo(int id, [FromBody] EquipoDTO dto)
         {
+            if (id != dto.Id)
+                return BadRequest("ID inválido");
+
             var equipo = await _context.Equipos.FindAsync(id);
             if (equipo == null)
                 return NotFound("Equipo no encontrado");
 
-            equipo.Codificacion = dto.Codificacion;
             equipo.Marca = dto.Marca;
             equipo.Modelo = dto.Modelo;
             equipo.Serie = dto.Serie;
             equipo.Ubicacion = dto.Ubicacion;
-            equipo.FechaIngreso = dto.FechaIngreso;
+            equipo.Estado = dto.Estado;
+            equipo.FechaActualizacion = DateTime.UtcNow;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-                return Ok("Equipo actualizado correctamente");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error al guardar cambios: {ex.Message}");
-            }
+            await _context.SaveChangesAsync();
+            return Ok("Equipo actualizado correctamente");
         }
 
-            [HttpPost("importar-excel")]
+        [HttpPost("importar-excel")]
             public async Task<IActionResult> ImportarExcel(IFormFile file)
             {
                 if (file == null || file.Length == 0)
