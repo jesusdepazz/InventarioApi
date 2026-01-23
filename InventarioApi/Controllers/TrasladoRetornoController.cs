@@ -34,15 +34,16 @@ namespace InventarioApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostTrasladoRetorno(TrasladoRetornoCreateDto dto)
+        [HttpPost]
+        public async Task<IActionResult> PostTrasladoRetorno([FromBody] TrasladoRetornoCreateDto dto)
         {
             foreach (var item in dto.Equipos)
             {
                 var existe = await _context.Equipos
                     .AnyAsync(e => e.Codificacion == item.Equipo);
 
-                if (!existe)
-                    return BadRequest($"El equipo {item.Equipo} no existe");
+                if (dto.Equipos == null || !dto.Equipos.Any())
+                    return BadRequest("Debe enviar al menos un equipo");
             }
 
             var traslado = new TrasladoRetorno
@@ -53,12 +54,14 @@ namespace InventarioApi.Controllers
                 MotivoSalida = dto.MotivoSalida,
                 FechaRetorno = dto.FechaRetorno,
                 Status = dto.Status,
-                RazonNoLiquidada = dto.RazonNoLiquidada,
-                Detalles = dto.Equipos.Select(e => new TrasladoRetornoDetalle
-                {
-                    Equipo = e.Equipo
-                }).ToList()
+                RazonNoLiquidada = dto.RazonNoLiquidada
             };
+
+            traslado.Detalles = dto.Equipos.Select(e => new TrasladoRetornoDetalle
+            {
+                Equipo = e.Equipo,
+                TrasladoRetorno = traslado   // 🔥 CLAVE
+            }).ToList();
 
             _context.TrasladoRetornos.Add(traslado);
             await _context.SaveChangesAsync();

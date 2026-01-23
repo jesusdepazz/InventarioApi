@@ -8,5 +8,5 @@
     public string Status { get; set; }
     public string RazonNoLiquidada { get; set; }
 
-    public List<TrasladoRetornoDetalleDto> Equipos { get; set; }
+    public List<TrasladoRetornoDetalleDto> Equipos { get; set; } = new();
 }

@@ -9,5 +9,6 @@
     public string Status { get; set; }
     public string RazonNoLiquidada { get; set; }
 
-    public ICollection<TrasladoRetornoDetalle> Detalles { get; set; }
+    public ICollection<TrasladoRetornoDetalle> Detalles { get; set; } = new List<TrasladoRetornoDetalle>();
+
 }
