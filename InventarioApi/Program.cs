@@ -34,7 +34,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("React-Allow", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
+        policy.WithOrigins("https://inventory.guandy.com")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
