@@ -27,7 +27,8 @@ namespace Inventory.Data
         public DbSet<SalidaSuministro> SalidaSuministros { get; set; }
         public DbSet<BajaActivo> BajaActivos { get; set; }
         public DbSet<TrasladoRetorno> TrasladoRetornos { get; set; }
-
+        public DbSet<TrasladoRetornoEquipo> TrasladoRetornEquipos { get; set; }
+        public DbSet<TrasladoRetornoEmpleado> TrasladoRetornoEmpleados { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -74,6 +75,39 @@ namespace Inventory.Data
                 .WithOne(sal => sal.Suministro)
                 .HasForeignKey(sal => sal.SuministroId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<TrasladoRetorno>(entity =>
+            {
+                entity.HasKey(t => t.Id);
+
+                entity.HasMany(t => t.Equipos)
+                      .WithOne(d => d.TrasladoRetorno)
+                      .HasForeignKey(d => d.TrasladoRetornoId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<TrasladoRetornoEquipo>(entity =>
+            {
+                entity.HasKey(d => d.Id);
+
+                entity.Property(d => d.Equipo)
+                      .IsRequired()
+                      .HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<TrasladoRetornoEmpleado>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.EmpleadoId)
+                      .IsRequired();
+
+                entity.HasOne(e => e.TrasladoRetorno)
+                      .WithOne(t => t.Empleado)
+                      .HasForeignKey<TrasladoRetornoEmpleado>(e => e.TrasladoRetornoId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
         }
     }
 }

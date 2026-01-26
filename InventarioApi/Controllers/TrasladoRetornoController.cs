@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using InventarioApi.Models;
 using Inventory.Data;
+using InventarioApi.Models.DTOs;
 
 namespace InventarioApi.Controllers
 {
@@ -34,51 +35,78 @@ namespace InventarioApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostTrasladoRetorno(TrasladoRetorno traslado)
+        public async Task<IActionResult> PostTrasladoRetorno([FromBody] TrasladoRetornoDTO dto)
         {
-            var equipoExiste = await _context.Equipos
-                .AnyAsync(e => e.Codificacion == traslado.Equipo);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            if (!equipoExiste)
-                return BadRequest("La codificación del equipo no existe.");
+            if (dto.Empleado == null)
+                return BadRequest("Empleado es obligatorio");
+
+            if (dto.Equipos == null || !dto.Equipos.Any())
+                return BadRequest("Debe agregar al menos un equipo");
+
+            var codigos = dto.Equipos.Select(e => e.Equipo).ToList();
+
+            var existentes = await _context.Equipos
+                .Where(e => codigos.Contains(e.Codificacion))
+                .Select(e => e.Codificacion)
+                .ToListAsync();
+
+            var noExisten = codigos.Except(existentes).ToList();
+            if (noExisten.Any())
+                return BadRequest($"Equipos no existen: {string.Join(", ", noExisten)}");
+
+            var traslado = new TrasladoRetorno
+            {
+                No = dto.No,
+                FechaPase = dto.FechaPase,
+                MotivoSalida = dto.MotivoSalida,
+                UbicacionRetorno = dto.UbicacionRetorno,
+                FechaRetorno = dto.FechaRetorno,
+                CodigoProveedor = dto.CodigoProveedor,
+                TelefonoProveedor = dto.TelefonoProveedor,
+                PersonaRetira = dto.PersonaRetira,
+                NombreProveedor = dto.NombreProveedor,
+                NombreContacto = dto.NombreContacto,
+                Identificacion = dto.Identificacion,
+
+                Empleado = new TrasladoRetornoEmpleado
+                {
+                    EmpleadoId = dto.Empleado.EmpleadoId,
+                    Nombre = dto.Empleado.Nombre,
+                    Puesto = dto.Empleado.Puesto,
+                    Departamento = dto.Empleado.Departamento
+                },
+
+                Equipos = dto.Equipos.Select(eq => new TrasladoRetornoEquipo
+                {
+                    Equipo = eq.Equipo,
+                    DescripcionEquipo = eq.DescripcionEquipo,
+                    Marca = eq.Marca,
+                    Modelo = eq.Modelo,
+                    Serie = eq.Serie
+                }).ToList()
+            };
 
             _context.TrasladoRetornos.Add(traslado);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(
-                nameof(GetTrasladoRetorno),
-                new { id = traslado.Id },
-                traslado
-            );
+            return Ok(traslado);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTrasladoRetorno(int id, TrasladoRetorno traslado)
+        [HttpGet("detalle/{id}")]
+        public async Task<IActionResult> ObtenerDetalle(int id)
         {
-            if (id != traslado.Id)
-                return BadRequest("El ID del traslado no coincide.");
+            var traslado = await _context.TrasladoRetornos
+                .Include(t => t.Equipos)
+                .Include(t => t.Empleado)
+                .FirstOrDefaultAsync(t => t.Id == id);
 
-            var equipoExiste = await _context.Equipos
-                .AnyAsync(e => e.Codificacion == traslado.Equipo);
+            if (traslado == null)
+                return NotFound();
 
-            if (!equipoExiste)
-                return BadRequest("La codificación del equipo no existe.");
-
-            _context.Entry(traslado).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TrasladoRetornoExists(id))
-                    return NotFound();
-
-                throw;
-            }
-
-            return NoContent();
+            return Ok(traslado);
         }
 
         [HttpDelete("{id}")]
@@ -93,11 +121,6 @@ namespace InventarioApi.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool TrasladoRetornoExists(int id)
-        {
-            return _context.TrasladoRetornos.Any(e => e.Id == id);
         }
     }
 }

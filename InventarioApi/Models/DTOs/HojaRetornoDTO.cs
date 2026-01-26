@@ -1,10 +1,7 @@
-﻿using System.Text.Json.Serialization;
+﻿namespace InventarioApi.Models.DTOs;
 
-namespace InventarioApi.Models;
-
-public class TrasladoRetorno
+public class TrasladoRetornoDTO
 {
-    public int Id { get; set; }
     public string No { get; set; }
     public DateTime FechaPase { get; set; }
     public string MotivoSalida { get; set; }
@@ -16,35 +13,25 @@ public class TrasladoRetorno
     public string NombreProveedor { get; set; }
     public string NombreContacto { get; set; }
     public string Identificacion { get; set; }
-    public List<TrasladoRetornoEquipo> Equipos { get; set; } = new();
-    public TrasladoRetornoEmpleado Empleado { get; set; }
+    public List<TrasladoRetornoEquipoDTO> Equipos { get; set; }
+    public TrasladoRetornoEmpleadoDTO Empleado { get; set; }
 }
 
-public class TrasladoRetornoEquipo
+public class TrasladoRetornoEquipoDTO
 {
-    public int Id { get; set; }
-    public int TrasladoRetornoId { get; set; }
-
     public string Equipo { get; set; }
     public string DescripcionEquipo { get; set; }
     public string Marca { get; set; }
     public string Modelo { get; set; }
     public string Serie { get; set; }
-
-    [JsonIgnore]
-    public TrasladoRetorno TrasladoRetorno { get; set; }
 }
 
-public class TrasladoRetornoEmpleado
+public class TrasladoRetornoEmpleadoDTO
 {
-    public int Id { get; set; }
-    public int TrasladoRetornoId { get; set; }
     public string EmpleadoId { get; set; }
     public string Nombre { get; set; }
     public string Puesto { get; set; }
     public string Departamento { get; set; }
-
-    [JsonIgnore]
-    public TrasladoRetorno TrasladoRetorno { get; set; }
-
 }
+
+
