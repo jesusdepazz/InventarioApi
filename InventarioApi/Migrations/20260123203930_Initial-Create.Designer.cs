@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventarioApi.Migrations
 {
     [DbContext(typeof(InventarioContext))]
-    [Migration("20251217212354_Agregando-campos-traslados")]
-    partial class Agregandocampostraslados
+    [Migration("20260123203930_Initial-Create")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -442,7 +442,7 @@ namespace InventarioApi.Migrations
 
                     b.HasIndex("SuministroId");
 
-                    b.ToTable("EntradaSuministros");
+                    b.ToTable("EntradaSuministro");
                 });
 
             modelBuilder.Entity("InventarioApi.Models.Suministros.SalidaSuministro", b =>
@@ -474,7 +474,7 @@ namespace InventarioApi.Migrations
 
                     b.HasIndex("SuministroId");
 
-                    b.ToTable("SalidaSuministros");
+                    b.ToTable("SalidaSuministro");
                 });
 
             modelBuilder.Entity("InventarioApi.Models.Suministros.Suministro", b =>
@@ -501,7 +501,7 @@ namespace InventarioApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Suministros");
+                    b.ToTable("Suministro");
                 });
 
             modelBuilder.Entity("InventarioApi.Models.Traslado", b =>
@@ -713,7 +713,6 @@ namespace InventarioApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Estado")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Extension")
@@ -722,10 +721,10 @@ namespace InventarioApi.Migrations
                     b.Property<string>("Factura")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("FechaActualizacion")
+                    b.Property<DateTime?>("FechaActualizacion")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaIngreso")
+                    b.Property<DateTime?>("FechaIngreso")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("HojaNo")

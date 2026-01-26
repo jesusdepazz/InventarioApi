@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace InventarioApi.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstMigration : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -47,7 +47,6 @@ namespace InventarioApi.Migrations
                     table.PrimaryKey("PK_BajaActivos", x => x.Id);
                 });
 
-
             migrationBuilder.CreateTable(
                 name: "Equipos",
                 columns: table => new
@@ -57,9 +56,9 @@ namespace InventarioApi.Migrations
                     OrdenCompra = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Factura = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Proveedor = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FechaIngreso = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaIngreso = table.Column<DateTime>(type: "datetime2", nullable: true),
                     HojaNo = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FechaActualizacion = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaActualizacion = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Codificacion = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TipoEquipo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Marca = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -91,7 +90,8 @@ namespace InventarioApi.Migrations
                     FechaSolvencia = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Observaciones = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Accesorios = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Accesorios = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    JefeInmediato = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -142,19 +142,19 @@ namespace InventarioApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Suministros",
+                name: "Suministro",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     NombreProducto = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UbicacionProducto = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CantidadActual = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CantidadActual = table.Column<int>(type: "int", nullable: false),
                     DateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Suministros", x => x.Id);
+                    table.PrimaryKey("PK_Suministro", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -168,6 +168,9 @@ namespace InventarioApi.Migrations
                     Solicitante = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Equipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DescripcionEquipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Marca = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Modelo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Serie = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MotivoSalida = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UbicacionRetorno = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FechaRetorno = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -187,9 +190,19 @@ namespace InventarioApi.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     No = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FechaEmision = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PersonaEntrega = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PersonaRecibe = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CodigoEntrega = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NombreEntrega = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PuestoEntrega = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DepartamentoEntrega = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CodigoRecibe = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NombreRecibe = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PuestoRecibe = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DepartamentoRecibe = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Equipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DescripcionEquipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Marca = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Modelo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Serie = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Motivo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UbicacionDesde = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UbicacionHasta = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -306,7 +319,7 @@ namespace InventarioApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "EntradaSuministros",
+                name: "EntradaSuministro",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -317,38 +330,41 @@ namespace InventarioApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EntradaSuministros", x => x.Id);
+                    table.PrimaryKey("PK_EntradaSuministro", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_EntradaSuministros_Suministros_SuministroId",
+                        name: "FK_EntradaSuministro_Suministro_SuministroId",
                         column: x => x.SuministroId,
-                        principalTable: "Suministros",
+                        principalTable: "Suministro",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "SalidaSuministros",
+                name: "SalidaSuministro",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SuministroId = table.Column<int>(type: "int", nullable: false),
                     CantidadProducto = table.Column<int>(type: "int", nullable: false),
+                    PersonaResponsable = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DepartamentoResponsable = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Fecha = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SalidaSuministros", x => x.Id);
+                    table.PrimaryKey("PK_SalidaSuministro", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SalidaSuministros_Suministros_SuministroId",
+                        name: "FK_SalidaSuministro_Suministro_SuministroId",
                         column: x => x.SuministroId,
-                        principalTable: "Suministros",
+                        principalTable: "Suministro",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
             migrationBuilder.CreateIndex(
-                name: "IX_EntradaSuministros_SuministroId",
-                table: "EntradaSuministros",
+                name: "IX_EntradaSuministro_SuministroId",
+                table: "EntradaSuministro",
                 column: "SuministroId");
 
             migrationBuilder.CreateIndex(
@@ -362,8 +378,8 @@ namespace InventarioApi.Migrations
                 column: "HojaResponsabilidadId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SalidaSuministros_SuministroId",
-                table: "SalidaSuministros",
+                name: "IX_SalidaSuministro_SuministroId",
+                table: "SalidaSuministro",
                 column: "SuministroId");
 
             migrationBuilder.CreateIndex(
@@ -382,7 +398,7 @@ namespace InventarioApi.Migrations
                 name: "BajaActivos");
 
             migrationBuilder.DropTable(
-                name: "EntradaSuministros");
+                name: "EntradaSuministro");
 
             migrationBuilder.DropTable(
                 name: "Equipos");
@@ -397,7 +413,7 @@ namespace InventarioApi.Migrations
                 name: "Mantenimientos");
 
             migrationBuilder.DropTable(
-                name: "SalidaSuministros");
+                name: "SalidaSuministro");
 
             migrationBuilder.DropTable(
                 name: "Solicitudes");
@@ -418,7 +434,7 @@ namespace InventarioApi.Migrations
                 name: "Usuarios");
 
             migrationBuilder.DropTable(
-                name: "Suministros");
+                name: "Suministro");
 
             migrationBuilder.DropTable(
                 name: "HojasResponsabilidad");
