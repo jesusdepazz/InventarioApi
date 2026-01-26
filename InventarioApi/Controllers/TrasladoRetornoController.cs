@@ -18,9 +18,14 @@ namespace InventarioApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TrasladoRetorno>>> GetTrasladoRetornos()
+        public async Task<IActionResult> Get()
         {
-            return await _context.TrasladoRetornos.ToListAsync();
+            var traslados = await _context.TrasladoRetornos
+                .Include(t => t.Empleado)
+                .Include(t => t.Equipos)
+                .ToListAsync();
+
+            return Ok(traslados);
         }
 
         [HttpGet("{id}")]
