@@ -439,7 +439,7 @@ namespace InventarioApi.Migrations
 
                     b.HasIndex("SuministroId");
 
-                    b.ToTable("EntradaSuministros");
+                    b.ToTable("EntradaSuministro");
                 });
 
             modelBuilder.Entity("InventarioApi.Models.Suministros.SalidaSuministro", b =>
@@ -471,7 +471,7 @@ namespace InventarioApi.Migrations
 
                     b.HasIndex("SuministroId");
 
-                    b.ToTable("SalidaSuministros");
+                    b.ToTable("SalidaSuministro");
                 });
 
             modelBuilder.Entity("InventarioApi.Models.Suministros.Suministro", b =>
@@ -498,7 +498,7 @@ namespace InventarioApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Suministros");
+                    b.ToTable("Suministro");
                 });
 
             modelBuilder.Entity("InventarioApi.Models.Traslado", b =>
