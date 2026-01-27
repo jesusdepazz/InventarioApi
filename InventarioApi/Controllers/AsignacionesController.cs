@@ -17,10 +17,20 @@ public class AsignacionesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CrearAsignacion([FromBody] Asignacion asignacion)
     {
+        var yaAsignado = await _context.Asignaciones
+            .AnyAsync(a => a.CodificacionEquipo == asignacion.CodificacionEquipo);
+
+        if (yaAsignado)
+        {
+            return BadRequest("Este equipo ya está asignado a otro empleado");
+        }
+
         _context.Asignaciones.Add(asignacion);
         await _context.SaveChangesAsync();
+
         return Ok(asignacion);
     }
+
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Asignacion>>> GetAsignaciones()
