@@ -55,4 +55,28 @@ public class AsignacionesController : ControllerBase
         return NoContent();
     }
 
+    [HttpGet("empleado/{codigoEmpleado}/equipos")]
+    public async Task<IActionResult> ObtenerEquiposPorEmpleado(string codigoEmpleado)
+    {
+        var equipos = await (
+            from a in _context.Asignaciones
+            join e in _context.Equipos
+                on a.CodificacionEquipo equals e.Codificacion
+            where a.CodigoEmpleado == codigoEmpleado
+            select new
+            {
+                e.Codificacion,
+                e.Marca,
+                e.Modelo,
+                e.Serie,
+                e.TipoEquipo,
+                e.Ubicacion,
+                e.FechaIngreso,
+                e.Estado
+            }
+        ).ToListAsync();
+
+        return Ok(equipos);
+    }
+
 }
