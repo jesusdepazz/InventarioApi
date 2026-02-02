@@ -44,7 +44,7 @@ public class HojasResponsabilidadController : ControllerBase
             SolvenciaNo = dto.SolvenciaNo,
             FechaSolvencia = dto.FechaSolvencia,
             Observaciones = dto.Observaciones,
-            Accesorios = dto.Accesorios, 
+            Accesorios = dto.Accesorios,
             JefeInmediato = dto.JefeInmediato,
             Empleados = dto.Empleados.Select(e => new HojaEmpleado
             {
@@ -113,6 +113,89 @@ public class HojasResponsabilidadController : ControllerBase
         await _context.SaveChangesAsync();
 
         return Ok(new { mensaje = "Hoja eliminada correctamente." });
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> ActualizarHoja(int id, [FromBody] HojaResponsabilidadDTO dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var hoja = await _context.HojasResponsabilidad
+            .Include(h => h.Empleados)
+            .Include(h => h.Equipos)
+            .FirstOrDefaultAsync(h => h.Id == id);
+
+        if (hoja == null)
+            return NotFound(new { mensaje = "Hoja no encontrada." });
+
+        if (hoja.HojaNo != dto.HojaNo)
+        {
+            bool existe = await _context.HojasResponsabilidad
+                .AnyAsync(h => h.HojaNo == dto.HojaNo && h.Id != id);
+
+            if (existe)
+                return BadRequest(new { mensaje = "Ya existe una hoja con este Correlativo." });
+        }
+
+        var codigosEquipo = dto.Equipos.Select(e => e.Codificacion).ToList();
+
+        var equiposEnOtraHoja = await _context.HojaEquipos
+            .Where(eq =>
+                codigosEquipo.Contains(eq.Codificacion) &&
+                eq.HojaResponsabilidadId != id
+            )
+            .Select(eq => eq.Codificacion)
+            .ToListAsync();
+
+        if (equiposEnOtraHoja.Any())
+            return BadRequest(new
+            {
+                mensaje = "Los siguientes equipos ya están asignados a otra hoja: " +
+                          string.Join(", ", equiposEnOtraHoja)
+            });
+
+        hoja.HojaNo = dto.HojaNo;
+        hoja.Motivo = dto.Motivo;
+        hoja.Comentarios = dto.Comentarios;
+        hoja.Estado = dto.Estado;
+        hoja.SolvenciaNo = dto.SolvenciaNo;
+        hoja.FechaSolvencia = dto.FechaSolvencia;
+        hoja.Observaciones = dto.Observaciones;
+        hoja.Accesorios = dto.Accesorios;
+        hoja.JefeInmediato = dto.JefeInmediato;
+
+        hoja.Empleados.Clear();
+        foreach (var e in dto.Empleados)
+        {
+            hoja.Empleados.Add(new HojaEmpleado
+            {
+                EmpleadoId = e.EmpleadoId,
+                Nombre = e.Nombre,
+                Puesto = e.Puesto,
+                Departamento = e.Departamento
+            });
+        }
+
+        hoja.Equipos.Clear();
+        foreach (var eq in dto.Equipos)
+        {
+            hoja.Equipos.Add(new HojaEquipo
+            {
+                Codificacion = eq.Codificacion,
+                Marca = eq.Marca,
+                Modelo = eq.Modelo,
+                Serie = eq.Serie,
+                TipoEquipo = eq.TipoEquipo,
+                Ubicacion = eq.Ubicacion,
+                FechaIngreso = eq.FechaIngreso,
+                Estado = eq.Estado
+            });
+        }
+
+        await _context.SaveChangesAsync();
+
+        return Ok(hoja);
     }
 
 }
