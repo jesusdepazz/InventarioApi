@@ -22,6 +22,9 @@ namespace Inventory.Data
         public DbSet<HojaEmpleado> HojaEmpleados { get; set; }
         public DbSet<HojaEquipo> HojaEquipos { get; set; }
         public DbSet<Traslado> Traslados { get; set; }
+        public DbSet<TrasladoEquipo> TrasladoEquipos { get; set; }
+public DbSet<TrasladoEmpleadoEntrega> TrasladoEmpleadoEntregas { get; set; }
+public DbSet<TrasladoEmpleadoRecibe> TrasladoEmpleadoRecibes { get; set; }
         public DbSet<Suministro> Suministros { get; set; }
         public DbSet<EntradaSuministro> EntradaSuministros { get; set; }
         public DbSet<SalidaSuministro> SalidaSuministros { get; set; }
@@ -108,6 +111,25 @@ namespace Inventory.Data
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
+            modelBuilder.Entity<Traslado>(entity =>
+            {
+                entity.HasKey(t => t.Id);
+
+                entity.HasMany(t => t.Equipos)
+                      .WithOne()
+                      .HasForeignKey(e => e.TrasladoId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(t => t.EmpleadoEntrega)
+                      .WithOne()
+                      .HasForeignKey<TrasladoEmpleadoEntrega>(e => e.TrasladoId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(t => t.EmpleadoRecibe)
+                      .WithOne()
+                      .HasForeignKey<TrasladoEmpleadoRecibe>(e => e.TrasladoId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
         }
     }
 }
