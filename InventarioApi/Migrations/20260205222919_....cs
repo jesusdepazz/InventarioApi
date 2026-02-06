@@ -6,12 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace InventarioApi.Migrations
 {
     /// <inheritdoc />
-    public partial class TrasladosNuevos : Migration
+    public partial class _ : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
-        {
-
+        { 
             migrationBuilder.CreateTable(
                 name: "Traslados",
                 columns: table => new
@@ -30,6 +29,7 @@ namespace InventarioApi.Migrations
                 {
                     table.PrimaryKey("PK_Traslados", x => x.Id);
                 });
+
 
             migrationBuilder.CreateTable(
                 name: "TrasladoEmpleadoEntregas",
@@ -123,8 +123,6 @@ namespace InventarioApi.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-
-
             migrationBuilder.DropTable(
                 name: "TrasladoEmpleadoEntregas");
 
@@ -136,7 +134,6 @@ namespace InventarioApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "Traslados");
-
         }
     }
 }
