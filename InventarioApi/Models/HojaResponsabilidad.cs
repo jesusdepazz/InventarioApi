@@ -12,7 +12,7 @@ public class HojaResponsabilidad
     public DateTime? FechaSolvencia { get; set; } = DateTime.Now;
     public string Observaciones { get; set; }
     public DateTime FechaCreacion { get; set; } = DateTime.Now;
-    public string Accesorios { get; set; }
+    public string? Accesorios { get; set; }
     public string JefeInmediato { get; set; }
     public List<HojaSolvencia> Solvencias { get; set; } = new();
     public List<HojaEmpleado> Empleados { get; set; } = new();
