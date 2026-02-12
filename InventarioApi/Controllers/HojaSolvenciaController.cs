@@ -17,8 +17,11 @@ namespace InventarioApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<HojaSolvencia>> CrearSolvencia(int hojaResponsabilidadId, string observaciones)
+        public async Task<ActionResult<HojaSolvencia>> CrearSolvencia(int hojaResponsabilidadId, string observaciones, string solvenciaNo)
         {
+            if (string.IsNullOrWhiteSpace(solvenciaNo))
+                return BadRequest("Debe enviar el número de solvencia.");
+
             var hojaResp = await _context.HojasResponsabilidad
                 .Include(h => h.Empleados)
                 .Include(h => h.Equipos)
@@ -28,14 +31,14 @@ namespace InventarioApi.Controllers
                 return BadRequest("No se encontró la Hoja de Responsabilidad.");
 
             var empleados = string.Join(", ", hojaResp.Empleados
-                .Select(e => $" {e.EmpleadoId} - {e.Nombre} - {e.Puesto} - {e.Departamento}"));
+                .Select(e => $"{e.EmpleadoId} - {e.Nombre} - {e.Puesto} - {e.Departamento}"));
 
             var equipos = string.Join(", ", hojaResp.Equipos
                 .Select(eq => $"{eq.Codificacion} {eq.Marca} {eq.Modelo} ({eq.Ubicacion})"));
 
             var solvencia = new HojaSolvencia
             {
-                SolvenciaNo = Guid.NewGuid().ToString().Substring(0, 8),
+                SolvenciaNo = solvenciaNo,
                 FechaSolvencia = DateTime.Now,
                 Observaciones = observaciones,
                 HojaResponsabilidadId = hojaResp.Id,
@@ -54,7 +57,9 @@ namespace InventarioApi.Controllers
 
             foreach (var cod in codificaciones)
             {
-                var equipoInv = await _context.Equipos.FirstOrDefaultAsync(e => e.Codificacion == cod);
+                var equipoInv = await _context.Equipos
+                    .FirstOrDefaultAsync(e => e.Codificacion == cod);
+
                 if (equipoInv != null)
                 {
                     var ultimaAsignacion = await _context.Asignaciones
@@ -62,7 +67,8 @@ namespace InventarioApi.Controllers
                         .OrderByDescending(a => a.Id)
                         .FirstOrDefaultAsync();
 
-                    equipoInv.ResponsableAnterior = ultimaAsignacion?.NombreEmpleado ?? "Ninguno";
+                    equipoInv.ResponsableAnterior =
+                        ultimaAsignacion?.NombreEmpleado ?? "Ninguno";
 
                     var asignacionesEquipo = _context.Asignaciones
                         .Where(a => a.CodificacionEquipo == equipoInv.Codificacion);
