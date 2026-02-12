@@ -60,7 +60,6 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = "swagger";
 });
 
-
 app.UseHttpsRedirection();
 
 app.UseCors("React-Allow");
