@@ -40,6 +40,9 @@ namespace InventoryApi.Controllers
                     e.Modelo,
                     e.Serie,
                     e.Extension,
+                    e.NumeroAsignado,
+                    e.Imei,
+                    e.EquipoTipo,
                     e.Ubicacion,
                     e.Comentarios,
                     e.Observaciones,
@@ -89,7 +92,11 @@ namespace InventoryApi.Controllers
                     Ubicacion = e.Ubicacion,
                     Estado = e.Estado,
                     TipoEquipo = e.TipoEquipo,
-                    FechaIngreso = e.FechaIngreso
+                    EquipoTipo = e.EquipoTipo,
+                    FechaIngreso = e.FechaIngreso,
+                    Extension = e.Extension,
+                    NumeroAsignado = e.NumeroAsignado,
+                    Imei = e.Imei,
                 })
                 .FirstOrDefaultAsync();
 
@@ -98,7 +105,6 @@ namespace InventoryApi.Controllers
 
             return Ok(equipo);
         }
-
 
         [HttpPost]
         public async Task<ActionResult<Equipo>> PostEquipo([FromForm] EquipoDTO dto)
@@ -131,6 +137,9 @@ namespace InventoryApi.Controllers
                 Modelo = dto.Modelo,
                 Serie = dto.Serie,
                 Extension = dto.Extension,
+                NumeroAsignado = dto.NumeroAsignado,
+                Imei = dto.Imei,
+                EquipoTipo = dto.EquipoTipo,
                 Ubicacion = dto.Ubicacion,
                 Comentarios = dto.Comentarios,
                 Observaciones = dto.Observaciones,
@@ -214,10 +223,11 @@ namespace InventoryApi.Controllers
                             Modelo = row[10]?.ToString(),
                             Serie = row[11]?.ToString(),
                             Extension = row[12]?.ToString(),
-                            Ubicacion = row[13]?.ToString(),
-                            ResponsableAnterior = row[14]?.ToString(),
-                            Comentarios = row[15]?.ToString(),
-                            Observaciones = row[16]?.ToString()
+                            Imei = row[13]?.ToString(),
+                            Ubicacion = row[14]?.ToString(),
+                            ResponsableAnterior = row[15]?.ToString(),
+                            Comentarios = row[16]?.ToString(),
+                            Observaciones = row[17]?.ToString()
                         };
 
                         equipos.Add(equipo);

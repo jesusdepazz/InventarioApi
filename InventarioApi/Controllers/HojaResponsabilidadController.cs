@@ -36,6 +36,7 @@ public class HojasResponsabilidadController : ControllerBase
 
         var hoja = new HojaResponsabilidad
         {
+            TipoHoja = dto.TipoHoja,
             HojaNo = dto.HojaNo,
             Motivo = dto.Motivo,
             Comentarios = dto.Comentarios,
@@ -63,6 +64,10 @@ public class HojasResponsabilidadController : ControllerBase
                 Ubicacion = eq.Ubicacion,
                 FechaIngreso = eq.FechaIngreso,
                 Estado = eq.Estado,
+                NumeroAsignado = eq.NumeroAsignado,
+                Extension = eq.Extension,
+                Imei = eq.Imei,
+                EquipoTipo = eq.EquipoTipo,
             }).ToList()
         };
 
