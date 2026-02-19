@@ -5,7 +5,7 @@
 namespace InventarioApi.Migrations
 {
     /// <inheritdoc />
-    public partial class HDRMovil : Migration
+    public partial class Test : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
