@@ -45,7 +45,7 @@ public class HojaEquipo
     public string Ubicacion { get; set; }
     public string FechaIngreso { get; set; }
     public string Estado { get; set; }
-    public string EquipoTipo { get; set; }
+    public string? EquipoTipo { get; set; }
     public string? Extension { get; set; }
     public string? NumeroAsignado { get; set; }
     public string? Imei { get; set; }
