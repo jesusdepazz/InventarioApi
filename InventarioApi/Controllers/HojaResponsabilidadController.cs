@@ -19,11 +19,11 @@ public class HojasResponsabilidadController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        bool hojaExiste = await _context.HojasResponsabilidad
-            .AnyAsync(h => h.HojaNo == dto.HojaNo);
+        int cantidadConMismoCorrelativo = await _context.HojasResponsabilidad
+            .CountAsync(h => h.HojaNo == dto.HojaNo);
 
-        if (hojaExiste)
-            return BadRequest(new { mensaje = "Ya existe una hoja con este Correlativo." });
+        if (cantidadConMismoCorrelativo >= 2)
+            return BadRequest(new { mensaje = "Ya existen dos hojas con este Correlativo. No se puede crear una tercera." });
 
         var codigosEquipo = dto.Equipos.Select(eq => eq.Codificacion).ToList();
         var equiposEnOtraHoja = await _context.HojaEquipos
