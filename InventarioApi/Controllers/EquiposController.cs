@@ -22,41 +22,74 @@ namespace InventoryApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<object>>> GetEquipos()
         {
-            var equiposConAsignaciones = await _context.Equipos
-                .Select(e => new
-                {
-                    e.Id,
-                    e.OrdenCompra,
-                    e.Factura,
-                    e.Proveedor,
-                    e.FechaIngreso,
-                    e.HojaNo,
-                    e.FechaActualizacion,
-                    e.ResponsableAnterior,
-                    e.Codificacion,
-                    e.Estado,
-                    e.TipoEquipo,
-                    e.Marca,
-                    e.Modelo,
-                    e.Serie,
-                    e.Extension,
-                    e.NumeroAsignado,
-                    e.Imei,
-                    e.EquipoTipo,
-                    e.Ubicacion,
-                    e.Comentarios,
-                    e.Observaciones,
+            var equipos = await _context.Equipos.ToListAsync();
 
-                    Asignaciones = _context.Asignaciones
-                        .Where(a => a.CodificacionEquipo == e.Codificacion)
-                        .Select(a => new {
+            var hojas = await _context.HojasResponsabilidad
+                .Include(h => h.Equipos)
+                .ToListAsync();
+
+            var asignaciones = await _context.Asignaciones
+                .Select(a => new
+                {
+                    a.CodificacionEquipo,
+                    a.CodigoEmpleado,
+                    a.NombreEmpleado,
+                    a.Puesto
+                })
+                .ToListAsync();
+
+            var equiposConAsignaciones = equipos
+                .Select(e =>
+                {
+                    var hojaAsignada = hojas.FirstOrDefault(h =>
+                        h.Equipos.Any(eq =>
+                            !string.IsNullOrWhiteSpace(eq.Codificacion) &&
+                            !string.IsNullOrWhiteSpace(e.Codificacion) &&
+                            eq.Codificacion.Trim().ToUpper() == e.Codificacion.Trim().ToUpper()
+                        )
+                    );
+
+                    var asignacionesEquipo = asignaciones
+                        .Where(a =>
+                            !string.IsNullOrWhiteSpace(a.CodificacionEquipo) &&
+                            !string.IsNullOrWhiteSpace(e.Codificacion) &&
+                            a.CodificacionEquipo.Trim().ToUpper() == e.Codificacion.Trim().ToUpper()
+                        )
+                        .Select(a => new
+                        {
                             a.CodigoEmpleado,
                             a.NombreEmpleado,
                             a.Puesto
                         })
-                        .ToList()
+                        .ToList();
+
+                    return new
+                    {
+                        e.Id,
+                        e.OrdenCompra,
+                        e.Factura,
+                        e.Proveedor,
+                        e.FechaIngreso,
+                        HojaNo = hojaAsignada?.HojaNo ?? e.HojaNo,
+                        e.FechaActualizacion,
+                        e.ResponsableAnterior,
+                        e.Codificacion,
+                        e.Estado,
+                        e.TipoEquipo,
+                        e.Marca,
+                        e.Modelo,
+                        e.Serie,
+                        e.Extension,
+                        e.NumeroAsignado,
+                        e.Imei,
+                        e.EquipoTipo,
+                        e.Ubicacion,
+                        e.Comentarios,
+                        e.Observaciones,
+                        Asignaciones = asignacionesEquipo
+                    };
                 })
-                .ToListAsync();
+                .ToList();
 
             return Ok(equiposConAsignaciones);
         }
