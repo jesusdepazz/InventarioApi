@@ -23,7 +23,8 @@ public class HojaEquipoDTO
 }
 
 public class HojaResponsabilidadDTO
-{
+{   
+    public int Version { get; set; }
     public string? TipoHoja { get; set; }
     public string HojaNo { get; set; }
     public string Motivo { get; set; }
