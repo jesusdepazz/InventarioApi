@@ -19,20 +19,37 @@ public class HojasResponsabilidadController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
+        if (dto.Empleados == null || !dto.Empleados.Any())
+            return BadRequest(new { mensaje = "Debe agregar al menos un empleado." });
+
+        if (dto.Equipos == null || !dto.Equipos.Any())
+            return BadRequest(new { mensaje = "Debe agregar al menos un equipo." });
+
         int cantidadConMismoCorrelativo = await _context.HojasResponsabilidad
             .CountAsync(h => h.HojaNo == dto.HojaNo);
 
         if (cantidadConMismoCorrelativo >= 2)
-            return BadRequest(new { mensaje = "Ya existen dos hojas con este Correlativo. No se puede crear una tercera." });
+            return BadRequest(new
+            {
+                mensaje = "Ya existen dos hojas con este Correlativo. No se puede crear una tercera."
+            });
 
-        var codigosEquipo = dto.Equipos.Select(eq => eq.Codificacion).ToList();
+        var codigosEquipo = dto.Equipos
+            .Where(eq => !string.IsNullOrWhiteSpace(eq.Codificacion))
+            .Select(eq => eq.Codificacion)
+            .ToList();
+
         var equiposEnOtraHoja = await _context.HojaEquipos
             .Where(eq => codigosEquipo.Contains(eq.Codificacion))
             .Select(eq => eq.Codificacion)
             .ToListAsync();
 
         if (equiposEnOtraHoja.Any())
-            return BadRequest(new { mensaje = "Los siguientes equipos ya están asignados a otra hoja: " + string.Join(", ", equiposEnOtraHoja) });
+            return BadRequest(new
+            {
+                mensaje = "Los siguientes equipos ya están asignados a otra hoja: " +
+                          string.Join(", ", equiposEnOtraHoja)
+            });
 
         var hoja = new HojaResponsabilidad
         {
@@ -47,6 +64,8 @@ public class HojasResponsabilidadController : ControllerBase
             Observaciones = dto.Observaciones,
             Accesorios = dto.Accesorios,
             JefeInmediato = dto.JefeInmediato,
+            Version = 0,
+
             Empleados = dto.Empleados.Select(e => new HojaEmpleado
             {
                 EmpleadoId = e.EmpleadoId,
@@ -54,6 +73,7 @@ public class HojasResponsabilidadController : ControllerBase
                 Puesto = e.Puesto,
                 Departamento = e.Departamento
             }).ToList(),
+
             Equipos = dto.Equipos.Select(eq => new HojaEquipo
             {
                 Codificacion = eq.Codificacion,
@@ -74,7 +94,13 @@ public class HojasResponsabilidadController : ControllerBase
         _context.HojasResponsabilidad.Add(hoja);
         await _context.SaveChangesAsync();
 
-        return Ok(hoja);
+        return Ok(new
+        {
+            mensaje = "Hoja creada correctamente",
+            hoja.Id,
+            hoja.HojaNo,
+            hoja.Version
+        });
     }
 
 
@@ -126,6 +152,12 @@ public class HojasResponsabilidadController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
+        if (dto.Empleados == null || !dto.Empleados.Any())
+            return BadRequest(new { mensaje = "Debe agregar al menos un empleado." });
+
+        if (dto.Equipos == null || !dto.Equipos.Any())
+            return BadRequest(new { mensaje = "Debe agregar al menos un equipo." });
+
         var hoja = await _context.HojasResponsabilidad
             .Include(h => h.Empleados)
             .Include(h => h.Equipos)
@@ -143,7 +175,10 @@ public class HojasResponsabilidadController : ControllerBase
                 return BadRequest(new { mensaje = "Ya existe una hoja con este Correlativo." });
         }
 
-        var codigosEquipo = dto.Equipos.Select(e => e.Codificacion).ToList();
+        var codigosEquipo = dto.Equipos
+            .Where(e => !string.IsNullOrWhiteSpace(e.Codificacion))
+            .Select(e => e.Codificacion)
+            .ToList();
 
         var equiposEnOtraHoja = await _context.HojaEquipos
             .Where(eq =>
@@ -198,9 +233,17 @@ public class HojasResponsabilidadController : ControllerBase
             });
         }
 
+        hoja.Version += 1;
+
         await _context.SaveChangesAsync();
 
-        return Ok(hoja);
+        return Ok(new
+        {
+            mensaje = "Hoja actualizada correctamente",
+            hoja.Id,
+            hoja.HojaNo,
+            hoja.Version
+        });
     }
 
 }
