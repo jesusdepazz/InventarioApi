@@ -13,8 +13,9 @@ public class TrasladoRetornoDTO
     public string NombreProveedor { get; set; }
     public string NombreContacto { get; set; }
     public string Identificacion { get; set; }
-    public List<TrasladoRetornoEquipoDTO> Equipos { get; set; }
-    public TrasladoRetornoEmpleadoDTO Empleado { get; set; }
+
+    public List<TrasladoRetornoEquipoDTO> Equipos { get; set; } = new();
+    public List<TrasladoRetornoEmpleadoDTO> Empleados { get; set; } = new();
 }
 
 public class TrasladoRetornoEquipoDTO
@@ -33,5 +34,3 @@ public class TrasladoRetornoEmpleadoDTO
     public string Puesto { get; set; }
     public string Departamento { get; set; }
 }
-
-

@@ -16,8 +16,9 @@ public class TrasladoRetorno
     public string NombreProveedor { get; set; }
     public string NombreContacto { get; set; }
     public string Identificacion { get; set; }
+
     public List<TrasladoRetornoEquipo> Equipos { get; set; } = new();
-    public TrasladoRetornoEmpleado Empleado { get; set; }
+    public List<TrasladoRetornoEmpleado> Empleados { get; set; } = new();
 }
 
 public class TrasladoRetornoEquipo
@@ -46,5 +47,4 @@ public class TrasladoRetornoEmpleado
 
     [JsonIgnore]
     public TrasladoRetorno TrasladoRetorno { get; set; }
-
 }

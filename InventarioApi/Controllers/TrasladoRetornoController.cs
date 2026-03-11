@@ -21,7 +21,7 @@ namespace InventarioApi.Controllers
         public async Task<IActionResult> Get()
         {
             var traslados = await _context.TrasladoRetornos
-                .Include(t => t.Empleado)
+                .Include(t => t.Empleados)
                 .Include(t => t.Equipos)
                 .ToListAsync();
 
@@ -45,8 +45,8 @@ namespace InventarioApi.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (dto.Empleado == null)
-                return BadRequest("Empleado es obligatorio");
+            if (dto.Empleados == null || !dto.Empleados.Any())
+                return BadRequest("Debe agregar al menos un empleado");
 
             if (dto.Equipos == null || !dto.Equipos.Any())
                 return BadRequest("Debe agregar al menos un equipo");
@@ -76,13 +76,13 @@ namespace InventarioApi.Controllers
                 NombreContacto = dto.NombreContacto,
                 Identificacion = dto.Identificacion,
 
-                Empleado = new TrasladoRetornoEmpleado
+                Empleados = dto.Empleados.Select(emp => new TrasladoRetornoEmpleado
                 {
-                    EmpleadoId = dto.Empleado.EmpleadoId,
-                    Nombre = dto.Empleado.Nombre,
-                    Puesto = dto.Empleado.Puesto,
-                    Departamento = dto.Empleado.Departamento
-                },
+                    EmpleadoId = emp.EmpleadoId,
+                    Nombre = emp.Nombre,
+                    Puesto = emp.Puesto,
+                    Departamento = emp.Departamento
+                }).ToList(),
 
                 Equipos = dto.Equipos.Select(eq => new TrasladoRetornoEquipo
                 {
@@ -105,7 +105,7 @@ namespace InventarioApi.Controllers
         {
             var traslado = await _context.TrasladoRetornos
                 .Include(t => t.Equipos)
-                .Include(t => t.Empleado)
+                .Include(t => t.Empleados)
                 .FirstOrDefaultAsync(t => t.Id == id);
 
             if (traslado == null)

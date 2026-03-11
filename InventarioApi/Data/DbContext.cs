@@ -96,6 +96,11 @@ public DbSet<TrasladoEmpleadoRecibe> TrasladoEmpleadoRecibes { get; set; }
                 entity.Property(d => d.Equipo)
                       .IsRequired()
                       .HasMaxLength(50);
+
+                entity.HasOne(d => d.TrasladoRetorno)
+                      .WithMany(t => t.Equipos)
+                      .HasForeignKey(d => d.TrasladoRetornoId)
+                      .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<TrasladoRetornoEmpleado>(entity =>
@@ -106,8 +111,8 @@ public DbSet<TrasladoEmpleadoRecibe> TrasladoEmpleadoRecibes { get; set; }
                       .IsRequired();
 
                 entity.HasOne(e => e.TrasladoRetorno)
-                      .WithOne(t => t.Empleado)
-                      .HasForeignKey<TrasladoRetornoEmpleado>(e => e.TrasladoRetornoId)
+                      .WithMany(t => t.Empleados)
+                      .HasForeignKey(e => e.TrasladoRetornoId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
