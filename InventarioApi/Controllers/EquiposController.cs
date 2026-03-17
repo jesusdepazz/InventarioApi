@@ -118,6 +118,7 @@ namespace InventoryApi.Controllers
                 .Select(e => new EquipoDTO
                 {
                     Id = e.Id,
+                    OrdenCompra = e.OrdenCompra,
                     Codificacion = e.Codificacion,
                     Marca = e.Marca,
                     Modelo = e.Modelo,
@@ -210,6 +211,10 @@ namespace InventoryApi.Controllers
             if (equipo == null)
                 return NotFound("Equipo no encontrado");
 
+            Console.WriteLine($"DTO OrdenCompra: {dto.OrdenCompra}");
+            Console.WriteLine($"ANTES DB OrdenCompra: {equipo.OrdenCompra}");
+
+            equipo.OrdenCompra = dto.OrdenCompra;
             equipo.Marca = dto.Marca;
             equipo.Modelo = dto.Modelo;
             equipo.Serie = dto.Serie;
@@ -217,8 +222,31 @@ namespace InventoryApi.Controllers
             equipo.Estado = dto.Estado;
             equipo.FechaActualizacion = DateTime.UtcNow;
 
-            await _context.SaveChangesAsync();
-            return Ok("Equipo actualizado correctamente");
+            _context.Entry(equipo).Property(e => e.OrdenCompra).IsModified = true;
+
+            Console.WriteLine($"DESPUÉS Entity OrdenCompra: {equipo.OrdenCompra}");
+
+            var cambios = await _context.SaveChangesAsync();
+
+            var actualizado = await _context.Equipos
+                .Where(e => e.Id == id)
+                .Select(e => new
+                {
+                    e.Id,
+                    e.OrdenCompra,
+                    e.Marca,
+                    e.Modelo,
+                    e.Serie,
+                    e.Ubicacion,
+                    e.Estado
+                })
+                .FirstOrDefaultAsync();
+
+            return Ok(new
+            {
+                cambios,
+                actualizado
+            });
         }
 
         [HttpPost("importar-excel")]
