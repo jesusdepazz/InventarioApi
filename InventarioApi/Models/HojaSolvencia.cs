@@ -8,6 +8,7 @@ public class HojaSolvencia
     public string Observaciones { get; set; }
     public int HojaResponsabilidadId { get; set; }
     public HojaResponsabilidad HojaResponsabilidad { get; set; }
+    public string JefeInmediato { get; set; }
     public string HojaNo { get; set; }
     public DateTime FechaHoja { get; set; }
     public string Empleados { get; set; }   
