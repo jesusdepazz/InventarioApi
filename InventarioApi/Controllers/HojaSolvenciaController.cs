@@ -46,6 +46,7 @@ namespace InventarioApi.Controllers
                 FechaHoja = hojaResp.FechaCreacion,
                 Empleados = empleados,
                 Equipos = equipos,
+                JefeInmediato = hojaResp.JefeInmediato,
                 FechaRegistro = DateTime.Now
             };
 
@@ -89,13 +90,16 @@ namespace InventarioApi.Controllers
         public async Task<ActionResult<IEnumerable<object>>> GetHistorico()
         {
             var historico = await _context.Solvencias
+                .Include(s => s.HojaResponsabilidad)
                 .Select(s => new
                 {
+                    s.Id,
                     s.SolvenciaNo,
                     s.FechaSolvencia,
                     s.Empleados,
                     s.Equipos,
                     s.HojaNo,
+                    s.JefeInmediato,
                     s.Observaciones
                 })
                 .ToListAsync();
