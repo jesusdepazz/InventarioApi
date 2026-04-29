@@ -19,6 +19,7 @@ public class HojaEquipoDTO
     public string? EquipoTipo { get; set; }
     public string? Extension { get; set; }
     public string? NumeroAsignado { get; set; }
+    public string? Observaciones { get; set; }
     public string? Imei { get; set; }
 }
 

@@ -85,6 +85,7 @@ public class HojasResponsabilidadController : ControllerBase
                 FechaIngreso = eq.FechaIngreso,
                 Estado = eq.Estado,
                 NumeroAsignado = eq.NumeroAsignado,
+                Observaciones = eq.Observaciones,
                 Extension = eq.Extension,
                 Imei = eq.Imei,
                 EquipoTipo = eq.EquipoTipo,
@@ -229,7 +230,12 @@ public class HojasResponsabilidadController : ControllerBase
                 TipoEquipo = eq.TipoEquipo,
                 Ubicacion = eq.Ubicacion,
                 FechaIngreso = eq.FechaIngreso,
-                Estado = eq.Estado
+                Estado = eq.Estado,
+                NumeroAsignado = eq.NumeroAsignado,
+                Observaciones = eq.Observaciones, 
+                Extension = eq.Extension,
+                Imei = eq.Imei,
+                EquipoTipo = eq.EquipoTipo,
             });
         }
 
