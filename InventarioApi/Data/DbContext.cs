@@ -29,6 +29,7 @@ public DbSet<TrasladoEmpleadoRecibe> TrasladoEmpleadoRecibes { get; set; }
         public DbSet<EntradaSuministro> EntradaSuministros { get; set; }
         public DbSet<SalidaSuministro> SalidaSuministros { get; set; }
         public DbSet<BajaActivo> BajaActivos { get; set; }
+        public DbSet<EmpleadoExterno> EmpleadosExternos { get; set; }
         public DbSet<TrasladoRetorno> TrasladoRetornos { get; set; }
         public DbSet<TrasladoRetornoEquipo> TrasladoRetornEquipos { get; set; }
         public DbSet<TrasladoRetornoEmpleado> TrasladoRetornoEmpleados { get; set; }

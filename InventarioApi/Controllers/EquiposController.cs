@@ -26,6 +26,7 @@ namespace InventoryApi.Controllers
 
             var hojas = await _context.HojasResponsabilidad
                 .Include(h => h.Equipos)
+                .Include(h => h.Empleados)
                 .ToListAsync();
 
             var asignaciones = await _context.Asignaciones
@@ -38,6 +39,40 @@ namespace InventoryApi.Controllers
                 })
                 .ToListAsync();
 
+            // Asignaciones derivadas de hojas externas (TipoHoja == "Externo")
+            var asignacionesExternas = hojas
+                .Where(h => h.TipoHoja == "Externo")
+                .SelectMany(h => h.Equipos.Select(eq => new
+                {
+                    CodificacionEquipo = eq.Codificacion,
+                    CodigoEmpleado     = h.Empleados.FirstOrDefault()?.EmpleadoId  ?? "—",
+                    NombreEmpleado     = h.Empleados.FirstOrDefault()?.Nombre      ?? "—",
+                    Puesto             = h.Empleados.FirstOrDefault()?.Puesto      ?? "—",
+                }))
+                .ToList();
+
+            var todasAsignaciones = asignaciones
+                .Select(a => new
+                {
+                    a.CodificacionEquipo,
+                    a.CodigoEmpleado,
+                    a.NombreEmpleado,
+                    a.Puesto
+                })
+                .Concat(asignacionesExternas
+                    // evitar duplicados si el externo también tiene Asignacion manual
+                    .Where(ext => !asignaciones.Any(a =>
+                        a.CodificacionEquipo?.Trim().ToUpper() == ext.CodificacionEquipo?.Trim().ToUpper() &&
+                        a.CodigoEmpleado == ext.CodigoEmpleado))
+                    .Select(ext => new
+                    {
+                        ext.CodificacionEquipo,
+                        ext.CodigoEmpleado,
+                        ext.NombreEmpleado,
+                        ext.Puesto
+                    }))
+                .ToList();
+
             var equiposConAsignaciones = equipos
                 .Select(e =>
                 {
@@ -49,7 +84,7 @@ namespace InventoryApi.Controllers
                         )
                     );
 
-                    var asignacionesEquipo = asignaciones
+                    var asignacionesEquipo = todasAsignaciones
                         .Where(a =>
                             !string.IsNullOrWhiteSpace(a.CodificacionEquipo) &&
                             !string.IsNullOrWhiteSpace(e.Codificacion) &&
