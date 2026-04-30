@@ -64,6 +64,7 @@ public class HojasResponsabilidadController : ControllerBase
             Observaciones = dto.Observaciones,
             Accesorios = dto.Accesorios,
             JefeInmediato = dto.JefeInmediato,
+            Proyecto = dto.Proyecto,
             Version = 0,
 
             Empleados = dto.Empleados.Select(e => new HojaEmpleado
@@ -205,6 +206,7 @@ public class HojasResponsabilidadController : ControllerBase
         hoja.Observaciones = dto.Observaciones;
         hoja.Accesorios = dto.Accesorios;
         hoja.JefeInmediato = dto.JefeInmediato;
+        hoja.Proyecto = dto.Proyecto;
 
         hoja.Empleados.Clear();
         foreach (var e in dto.Empleados)
