@@ -20,29 +20,25 @@ namespace Inventory.Controllers
         {
             var codigoNorm = codigo.Trim().ToUpper();
 
-<<<<<<< HEAD
-=======
-            // 1. Buscar en la tabla de empleados HR
->>>>>>> local
+            // 1. Buscar en la tabla de empleados HR (sin Include para evitar SqlNullValueException)
             var empleado = await _context.EmpleadosInfo
-                .Include(e => e.DepartamentoInfo)
                 .Where(e => e.Empleado.Trim().ToUpper() == codigoNorm)
                 .Select(e => new
                 {
-                    codigoEmpleado = e.Empleado,
-                    nombre         = e.Nombre,
-                    puesto         = e.Puesto,
-                    departamento   = e.DepartamentoInfo != null ? e.DepartamentoInfo.Descripcion : ""
+                    codigoEmpleado = e.Empleado ?? "",
+                    nombre         = e.Nombre   ?? "",
+                    puesto         = e.Puesto   ?? "",
+                    departamento   = _context.Departamentos
+                        .Where(d => d.Codigo == e.Departamento)
+                        .Select(d => d.Descripcion ?? "")
+                        .FirstOrDefault() ?? ""
                 })
                 .FirstOrDefaultAsync();
 
             if (empleado != null)
                 return Ok(empleado);
 
-<<<<<<< HEAD
-=======
             // 2. Fallback: buscar en historial de asignaciones
->>>>>>> local
             var asignacion = await _context.Asignaciones
                 .Where(a => a.CodigoEmpleado.Trim().ToUpper() == codigoNorm)
                 .Select(a => new
@@ -57,10 +53,7 @@ namespace Inventory.Controllers
             if (asignacion != null)
                 return Ok(asignacion);
 
-<<<<<<< HEAD
-=======
             // 3. Fallback: buscar en hojas de responsabilidad
->>>>>>> local
             var hojaEmp = await _context.HojaEmpleados
                 .Where(h => h.EmpleadoId.Trim().ToUpper() == codigoNorm)
                 .Select(h => new
@@ -85,14 +78,16 @@ namespace Inventory.Controllers
                 return Ok(new List<object>());
 
             var empleados = await _context.EmpleadosInfo
-                .Include(e => e.DepartamentoInfo)
-                .Where(e => e.Nombre.Contains(nombre))
+                .Where(e => e.Nombre != null && e.Nombre.Contains(nombre))
                 .Select(e => new
                 {
-                    codigoEmpleado = e.Empleado,
-                    nombre = e.Nombre,
-                    puesto = e.Puesto,
-                    departamento = e.DepartamentoInfo.Descripcion
+                    codigoEmpleado = e.Empleado ?? "",
+                    nombre         = e.Nombre   ?? "",
+                    puesto         = e.Puesto   ?? "",
+                    departamento   = _context.Departamentos
+                        .Where(d => d.Codigo == e.Departamento)
+                        .Select(d => d.Descripcion ?? "")
+                        .FirstOrDefault() ?? ""
                 })
                 .ToListAsync();
 

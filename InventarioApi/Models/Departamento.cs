@@ -10,6 +10,6 @@ public class Departamento
     [Column("Departamento")]
     public string Codigo { get; set; }
     [Column("Descripcion")]
-    public string Descripcion { get; set; }
-    public ICollection<EmpleadoInfo> Empleados { get; set; }
+    public string? Descripcion { get; set; }
+    public ICollection<EmpleadoInfo>? Empleados { get; set; }
 }
