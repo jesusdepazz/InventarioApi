@@ -19,8 +19,6 @@ namespace Inventory.Controllers
         public async Task<ActionResult<object>> GetEmpleadoPorCodigo(string codigo)
         {
             var codigoNorm = codigo.Trim().ToUpper();
-
-            // 1. Buscar en la tabla de empleados HR (sin Include para evitar SqlNullValueException)
             var empleado = await _context.EmpleadosInfo
                 .Where(e => e.Empleado.Trim().ToUpper() == codigoNorm)
                 .Select(e => new
@@ -38,7 +36,6 @@ namespace Inventory.Controllers
             if (empleado != null)
                 return Ok(empleado);
 
-            // 2. Fallback: buscar en historial de asignaciones
             var asignacion = await _context.Asignaciones
                 .Where(a => a.CodigoEmpleado.Trim().ToUpper() == codigoNorm)
                 .Select(a => new
@@ -53,7 +50,6 @@ namespace Inventory.Controllers
             if (asignacion != null)
                 return Ok(asignacion);
 
-            // 3. Fallback: buscar en hojas de responsabilidad
             var hojaEmp = await _context.HojaEmpleados
                 .Where(h => h.EmpleadoId.Trim().ToUpper() == codigoNorm)
                 .Select(h => new

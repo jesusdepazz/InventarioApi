@@ -117,7 +117,27 @@ public class HojasResponsabilidadController : ControllerBase
         if (hoja == null)
             return NotFound();
 
-        return Ok(hoja);
+        var dicFechas = (await _context.Asignaciones
+            .Select(a => new { a.CodificacionEquipo, a.FechaAsignacion })
+            .ToListAsync())
+            .GroupBy(a => a.CodificacionEquipo)
+            .ToDictionary(g => g.Key, g => g.Max(a => a.FechaAsignacion));
+
+        return Ok(new
+        {
+            hoja.Id, hoja.Version, hoja.TipoHoja, hoja.HojaNo, hoja.Motivo,
+            hoja.Comentarios, hoja.Estado, hoja.SolvenciaNo, hoja.FechaSolvencia,
+            hoja.Observaciones, hoja.FechaCreacion, hoja.Accesorios,
+            hoja.JefeInmediato, hoja.Proyecto,
+            Empleados = hoja.Empleados,
+            Equipos = hoja.Equipos.Select(eq => new
+            {
+                eq.Id, eq.Codificacion, eq.Marca, eq.Modelo, eq.Serie,
+                eq.TipoEquipo, eq.Ubicacion, eq.FechaIngreso, eq.Estado,
+                eq.EquipoTipo, eq.Extension, eq.NumeroAsignado, eq.Observaciones, eq.Imei,
+                FechaAsignacion = dicFechas.TryGetValue(eq.Codificacion ?? "", out var fa) ? fa : hoja.FechaCreacion
+            }).ToList()
+        });
     }
 
     [HttpGet]
@@ -128,7 +148,29 @@ public class HojasResponsabilidadController : ControllerBase
             .Include(h => h.Equipos)
             .ToListAsync();
 
-        return Ok(hojas);
+        var dicFechas = (await _context.Asignaciones
+            .Select(a => new { a.CodificacionEquipo, a.FechaAsignacion })
+            .ToListAsync())
+            .GroupBy(a => a.CodificacionEquipo)
+            .ToDictionary(g => g.Key, g => g.Max(a => a.FechaAsignacion));
+
+        var resultado = hojas.Select(h => new
+        {
+            h.Id, h.Version, h.TipoHoja, h.HojaNo, h.Motivo,
+            h.Comentarios, h.Estado, h.SolvenciaNo, h.FechaSolvencia,
+            h.Observaciones, h.FechaCreacion, h.Accesorios,
+            h.JefeInmediato, h.Proyecto,
+            Empleados = h.Empleados,
+            Equipos = h.Equipos.Select(eq => new
+            {
+                eq.Id, eq.Codificacion, eq.Marca, eq.Modelo, eq.Serie,
+                eq.TipoEquipo, eq.Ubicacion, eq.FechaIngreso, eq.Estado,
+                eq.EquipoTipo, eq.Extension, eq.NumeroAsignado, eq.Observaciones, eq.Imei,
+                FechaAsignacion = dicFechas.TryGetValue(eq.Codificacion ?? "", out var fa) ? fa : h.FechaCreacion
+            }).ToList()
+        }).ToList();
+
+        return Ok(resultado);
     }
 
     [HttpDelete("{id}")]
@@ -225,19 +267,19 @@ public class HojasResponsabilidadController : ControllerBase
         {
             hoja.Equipos.Add(new HojaEquipo
             {
-                Codificacion = eq.Codificacion,
-                Marca = eq.Marca,
-                Modelo = eq.Modelo,
-                Serie = eq.Serie,
-                TipoEquipo = eq.TipoEquipo,
-                Ubicacion = eq.Ubicacion,
-                FechaIngreso = eq.FechaIngreso,
-                Estado = eq.Estado,
+                Codificacion   = eq.Codificacion,
+                Marca          = eq.Marca,
+                Modelo         = eq.Modelo,
+                Serie          = eq.Serie,
+                TipoEquipo     = eq.TipoEquipo,
+                Ubicacion      = eq.Ubicacion,
+                FechaIngreso   = eq.FechaIngreso,
+                Estado         = eq.Estado,
                 NumeroAsignado = eq.NumeroAsignado,
-                Observaciones = eq.Observaciones, 
-                Extension = eq.Extension,
-                Imei = eq.Imei,
-                EquipoTipo = eq.EquipoTipo,
+                Observaciones  = eq.Observaciones,
+                Extension      = eq.Extension,
+                Imei           = eq.Imei,
+                EquipoTipo     = eq.EquipoTipo,
             });
         }
 
