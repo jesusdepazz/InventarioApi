@@ -20,6 +20,10 @@ namespace Inventory.Controllers
         {
             var codigoNorm = codigo.Trim().ToUpper();
 
+<<<<<<< HEAD
+=======
+            // 1. Buscar en la tabla de empleados HR
+>>>>>>> local
             var empleado = await _context.EmpleadosInfo
                 .Include(e => e.DepartamentoInfo)
                 .Where(e => e.Empleado.Trim().ToUpper() == codigoNorm)
@@ -35,6 +39,10 @@ namespace Inventory.Controllers
             if (empleado != null)
                 return Ok(empleado);
 
+<<<<<<< HEAD
+=======
+            // 2. Fallback: buscar en historial de asignaciones
+>>>>>>> local
             var asignacion = await _context.Asignaciones
                 .Where(a => a.CodigoEmpleado.Trim().ToUpper() == codigoNorm)
                 .Select(a => new
@@ -49,6 +57,10 @@ namespace Inventory.Controllers
             if (asignacion != null)
                 return Ok(asignacion);
 
+<<<<<<< HEAD
+=======
+            // 3. Fallback: buscar en hojas de responsabilidad
+>>>>>>> local
             var hojaEmp = await _context.HojaEmpleados
                 .Where(h => h.EmpleadoId.Trim().ToUpper() == codigoNorm)
                 .Select(h => new
