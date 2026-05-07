@@ -18,22 +18,52 @@ namespace Inventory.Controllers
         [HttpGet("{codigo}")]
         public async Task<ActionResult<object>> GetEmpleadoPorCodigo(string codigo)
         {
+            var codigoNorm = codigo.Trim().ToUpper();
+
             var empleado = await _context.EmpleadosInfo
                 .Include(e => e.DepartamentoInfo)
-                .Where(e => e.Empleado == codigo)
+                .Where(e => e.Empleado.Trim().ToUpper() == codigoNorm)
                 .Select(e => new
-                {   
+                {
                     codigoEmpleado = e.Empleado,
-                    nombre = e.Nombre,
-                    puesto = e.Puesto,
-                    departamento = e.DepartamentoInfo.Descripcion
+                    nombre         = e.Nombre,
+                    puesto         = e.Puesto,
+                    departamento   = e.DepartamentoInfo != null ? e.DepartamentoInfo.Descripcion : ""
                 })
                 .FirstOrDefaultAsync();
 
-            if (empleado == null)
-                return NotFound();
+            if (empleado != null)
+                return Ok(empleado);
 
-            return Ok(empleado);
+            var asignacion = await _context.Asignaciones
+                .Where(a => a.CodigoEmpleado.Trim().ToUpper() == codigoNorm)
+                .Select(a => new
+                {
+                    codigoEmpleado = a.CodigoEmpleado,
+                    nombre         = a.NombreEmpleado,
+                    puesto         = a.Puesto,
+                    departamento   = a.Departamento ?? ""
+                })
+                .FirstOrDefaultAsync();
+
+            if (asignacion != null)
+                return Ok(asignacion);
+
+            var hojaEmp = await _context.HojaEmpleados
+                .Where(h => h.EmpleadoId.Trim().ToUpper() == codigoNorm)
+                .Select(h => new
+                {
+                    codigoEmpleado = h.EmpleadoId,
+                    nombre         = h.Nombre,
+                    puesto         = h.Puesto,
+                    departamento   = h.Departamento ?? ""
+                })
+                .FirstOrDefaultAsync();
+
+            if (hojaEmp != null)
+                return Ok(hojaEmp);
+
+            return NotFound(new { mensaje = $"No se encontró el empleado con código '{codigo}'." });
         }
 
         [HttpGet("buscar")]
