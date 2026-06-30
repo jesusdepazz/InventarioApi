@@ -45,11 +45,21 @@ namespace InventarioApi.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (dto.Empleados == null || !dto.Empleados.Any())
-                return BadRequest("Debe agregar al menos un empleado");
-
             if (dto.Equipos == null || !dto.Equipos.Any())
                 return BadRequest("Debe agregar al menos un equipo");
+
+            var tipoRetiro = (dto.TipoRetiro ?? "proveedor").ToLower();
+
+            if (tipoRetiro == "empleado")
+            {
+                if (dto.Empleados == null || !dto.Empleados.Any())
+                    return BadRequest("Debe agregar al menos un empleado.");
+            }
+            else // proveedor
+            {
+                if (string.IsNullOrWhiteSpace(dto.NombreProveedor))
+                    return BadRequest("Debe ingresar el nombre del proveedor.");
+            }
 
             var codigos = dto.Equipos.Select(e => e.Equipo).ToList();
 
@@ -69,6 +79,8 @@ namespace InventarioApi.Controllers
                 MotivoSalida = dto.MotivoSalida,
                 UbicacionRetorno = dto.UbicacionRetorno,
                 FechaRetorno = dto.FechaRetorno,
+                TipoRetiro = tipoRetiro,
+                Estado = "Vigente",
                 CodigoProveedor = dto.CodigoProveedor,
                 TelefonoProveedor = dto.TelefonoProveedor,
                 PersonaRetira = dto.PersonaRetira,
@@ -112,6 +124,23 @@ namespace InventarioApi.Controllers
                 return NotFound();
 
             return Ok(traslado);
+        }
+
+        [HttpPatch("{id}/anular")]
+        public async Task<IActionResult> AnularTrasladoRetorno(int id)
+        {
+            var traslado = await _context.TrasladoRetornos.FindAsync(id);
+
+            if (traslado == null)
+                return NotFound();
+
+            if (traslado.Estado == "Anulado")
+                return BadRequest("El registro ya está anulado.");
+
+            traslado.Estado = "Anulado";
+            await _context.SaveChangesAsync();
+
+            return Ok(new { mensaje = "Registro anulado correctamente.", id });
         }
 
         [HttpDelete("{id}")]

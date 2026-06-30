@@ -7,12 +7,13 @@ public class TrasladoRetornoDTO
     public string MotivoSalida { get; set; }
     public string UbicacionRetorno { get; set; }
     public string FechaRetorno { get; set; }
-    public string CodigoProveedor { get; set; }
-    public string TelefonoProveedor { get; set; }
-    public string PersonaRetira { get; set; }
-    public string NombreProveedor { get; set; }
-    public string NombreContacto { get; set; }
-    public string Identificacion { get; set; }
+    public string? TipoRetiro { get; set; }   // "proveedor" | "empleado"
+    public string? CodigoProveedor { get; set; }
+    public string? TelefonoProveedor { get; set; }
+    public string? PersonaRetira { get; set; }
+    public string? NombreProveedor { get; set; }
+    public string? NombreContacto { get; set; }
+    public string? Identificacion { get; set; }
 
     public List<TrasladoRetornoEquipoDTO> Equipos { get; set; } = new();
     public List<TrasladoRetornoEmpleadoDTO> Empleados { get; set; } = new();

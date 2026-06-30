@@ -40,7 +40,8 @@ public class HojasResponsabilidadController : ControllerBase
             .ToList();
 
         var equiposEnOtraHoja = await _context.HojaEquipos
-            .Where(eq => codigosEquipo.Contains(eq.Codificacion))
+            .Where(eq => codigosEquipo.Contains(eq.Codificacion)
+                      && eq.HojaResponsabilidad.Estado != "Inactiva")
             .Select(eq => eq.Codificacion)
             .ToListAsync();
 
@@ -143,10 +144,13 @@ public class HojasResponsabilidadController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> ListarHojas()
     {
-        var hojas = await _context.HojasResponsabilidad
+        var hojas = (await _context.HojasResponsabilidad
             .Include(h => h.Empleados)
             .Include(h => h.Equipos)
-            .ToListAsync();
+            .ToListAsync())
+            .OrderBy(h => int.TryParse(h.HojaNo, out var n) ? n : int.MaxValue)
+            .ThenBy(h => h.HojaNo)
+            .ToList();
 
         var dicFechas = (await _context.Asignaciones
             .Select(a => new { a.CodificacionEquipo, a.FechaAsignacion })
@@ -227,7 +231,8 @@ public class HojasResponsabilidadController : ControllerBase
         var equiposEnOtraHoja = await _context.HojaEquipos
             .Where(eq =>
                 codigosEquipo.Contains(eq.Codificacion) &&
-                eq.HojaResponsabilidadId != id
+                eq.HojaResponsabilidadId != id &&
+                eq.HojaResponsabilidad.Estado != "Inactiva"
             )
             .Select(eq => eq.Codificacion)
             .ToListAsync();
@@ -238,6 +243,45 @@ public class HojasResponsabilidadController : ControllerBase
                 mensaje = "Los siguientes equipos ya están asignados a otra hoja: " +
                           string.Join(", ", equiposEnOtraHoja)
             });
+
+        bool soloHojaNoChanged =
+            hoja.HojaNo        != dto.HojaNo &&
+            hoja.Motivo        == dto.Motivo &&
+            hoja.Comentarios   == dto.Comentarios &&
+            hoja.Estado        == dto.Estado &&
+            hoja.SolvenciaNo   == dto.SolvenciaNo &&
+            hoja.FechaSolvencia == dto.FechaSolvencia &&
+            hoja.Observaciones == dto.Observaciones &&
+            hoja.Accesorios    == dto.Accesorios &&
+            hoja.JefeInmediato == dto.JefeInmediato &&
+            hoja.Proyecto      == dto.Proyecto;
+
+        // Before updating hoja fields, save current state as a version
+        var snapshot = new
+        {
+            HojaNo = hoja.HojaNo,
+            TipoHoja = hoja.TipoHoja,
+            Motivo = hoja.Motivo,
+            Observaciones = hoja.Observaciones,
+            Comentarios = hoja.Comentarios,
+            JefeInmediato = hoja.JefeInmediato,
+            Estado = hoja.Estado,
+            Accesorios = hoja.Accesorios,
+            Proyecto = hoja.Proyecto,
+            FechaCreacion = hoja.FechaCreacion,
+            Version = hoja.Version,
+            Empleados = hoja.Empleados.Select(e => new { e.EmpleadoId, e.Nombre, e.Puesto, e.Departamento }),
+            Equipos = hoja.Equipos.Select(eq => new { eq.Codificacion, eq.Marca, eq.Modelo, eq.Serie, eq.TipoEquipo, eq.Ubicacion, eq.Estado, eq.Observaciones })
+        };
+
+        var version = new HojaResponsabilidadVersion
+        {
+            HojaResponsabilidadId = hoja.Id,
+            NumeroVersion = hoja.Version,
+            FechaGuardado = DateTime.Now,
+            DatosJson = System.Text.Json.JsonSerializer.Serialize(snapshot)
+        };
+        _context.HojaResponsabilidadVersiones.Add(version);
 
         hoja.HojaNo = dto.HojaNo;
         hoja.Motivo = dto.Motivo;
@@ -283,7 +327,8 @@ public class HojasResponsabilidadController : ControllerBase
             });
         }
 
-        hoja.Version += 1;
+        if (!soloHojaNoChanged)
+            hoja.Version += 1;
 
         await _context.SaveChangesAsync();
 
@@ -294,6 +339,23 @@ public class HojasResponsabilidadController : ControllerBase
             hoja.HojaNo,
             hoja.Version
         });
+    }
+
+    [HttpGet("{id}/versiones")]
+    public async Task<IActionResult> GetVersiones(int id)
+    {
+        var versiones = await _context.HojaResponsabilidadVersiones
+            .Where(v => v.HojaResponsabilidadId == id)
+            .OrderByDescending(v => v.NumeroVersion)
+            .Select(v => new {
+                v.Id,
+                v.NumeroVersion,
+                v.FechaGuardado,
+                v.DatosJson
+            })
+            .ToListAsync();
+
+        return Ok(versiones);
     }
 
 }

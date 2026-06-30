@@ -33,14 +33,22 @@ namespace Inventory.Data
         public DbSet<TrasladoRetorno> TrasladoRetornos { get; set; }
         public DbSet<TrasladoRetornoEquipo> TrasladoRetornEquipos { get; set; }
         public DbSet<TrasladoRetornoEmpleado> TrasladoRetornoEmpleados { get; set; }
+        public DbSet<HojaResponsabilidadVersion> HojaResponsabilidadVersiones { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
+            // Tablas de Softland — solo lectura, no pertenecen a esta BD
             modelBuilder.Entity<EmpleadoInfo>(entity =>
             {
-                entity.ToTable("Empleado");
+                entity.ToTable("Empleado", t => t.ExcludeFromMigrations());
                 entity.HasKey(e => e.Empleado);
+            });
+
+            modelBuilder.Entity<Departamento>(entity =>
+            {
+                entity.ToTable("departamento", t => t.ExcludeFromMigrations());
+                entity.HasKey(d => d.Codigo);
             });
 
             modelBuilder.Entity<HojaEmpleado>(entity =>
@@ -67,6 +75,16 @@ namespace Inventory.Data
             .HasOne(s => s.HojaResponsabilidad)
             .WithMany(h => h.Solvencias)
             .HasForeignKey(s => s.HojaResponsabilidadId);
+
+            modelBuilder.Entity<HojaResponsabilidadVersion>(entity =>
+            {
+                entity.HasKey(v => v.Id);
+                entity.ToTable("HojaResponsabilidadVersiones", t => t.ExcludeFromMigrations());
+                entity.HasOne(v => v.HojaResponsabilidad)
+                      .WithMany()
+                      .HasForeignKey(v => v.HojaResponsabilidadId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
 
             modelBuilder.Entity<Suministro>()
                 .HasMany(s => s.Entradas)
