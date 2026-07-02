@@ -18,6 +18,18 @@ public class AsignacionesController : ControllerBase
     public async Task<IActionResult> CrearAsignacion([FromBody] Asignacion asignacion)
     {
         _context.Asignaciones.Add(asignacion);
+
+        if (!string.IsNullOrWhiteSpace(asignacion.Ubicacion))
+        {
+            var equipo = await _context.Equipos
+                .FirstOrDefaultAsync(e => e.Codificacion == asignacion.CodificacionEquipo);
+
+            if (equipo != null)
+            {
+                equipo.Ubicacion = asignacion.Ubicacion;
+            }
+        }
+
         await _context.SaveChangesAsync();
 
         return Ok(asignacion);

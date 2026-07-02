@@ -8,6 +8,7 @@ public class Asignacion
     public string Puesto { get; set; }
     public string Departamento { get; set; }
     public string CodificacionEquipo { get; set; }
+    public string? Ubicacion { get; set; }
     public DateTime FechaAsignacion { get; set; } = DateTime.UtcNow;
 }
 
