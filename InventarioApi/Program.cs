@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Inventory.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +33,6 @@ builder.Services.AddCors(options =>
     options.AddPolicy("React-Allow", policy =>
     {
         policy.WithOrigins("https://inventory.guandy.com")
-
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -70,5 +70,15 @@ app.UseAuthorization();
 app.UseStaticFiles();
 
 app.MapControllers();
+
+if (app.Environment.IsDevelopment())
+{
+    app.Lifetime.ApplicationStarted.Register(() =>
+    {
+        var url = $"{app.Urls.FirstOrDefault() ?? "http://localhost:5252"}/swagger";
+        try { Process.Start(new ProcessStartInfo(url) { UseShellExecute = true }); }
+        catch { /* no pasa nada si no hay navegador disponible (ej. en un servidor) */ }
+    });
+}
 
 app.Run();

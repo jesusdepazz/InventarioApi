@@ -168,6 +168,14 @@ namespace InventoryApi.Controllers
             if (equipo == null)
                 return NotFound("Equipo no encontrado");
 
+<<<<<<< Updated upstream
+=======
+            Console.WriteLine($"DTO OrdenCompra: {dto.OrdenCompra}");
+            Console.WriteLine($"ANTES DB OrdenCompra: {equipo.OrdenCompra}");
+
+            equipo.OrdenCompra = dto.OrdenCompra;
+            equipo.Factura = dto.Factura;
+>>>>>>> Stashed changes
             equipo.Marca = dto.Marca;
             equipo.Modelo = dto.Modelo;
             equipo.Serie = dto.Serie;
@@ -175,8 +183,37 @@ namespace InventoryApi.Controllers
             equipo.Estado = dto.Estado;
             equipo.FechaActualizacion = DateTime.UtcNow;
 
+<<<<<<< Updated upstream
             await _context.SaveChangesAsync();
             return Ok("Equipo actualizado correctamente");
+=======
+            _context.Entry(equipo).Property(e => e.OrdenCompra).IsModified = true;
+
+            Console.WriteLine($"DESPUÉS Entity OrdenCompra: {equipo.OrdenCompra}");
+
+            var cambios = await _context.SaveChangesAsync();
+
+            var actualizado = await _context.Equipos
+                .Where(e => e.Id == id)
+                .Select(e => new
+                {
+                    e.Id,
+                    e.OrdenCompra,
+                    e.Factura,
+                    e.Marca,
+                    e.Modelo,
+                    e.Serie,
+                    e.Ubicacion,
+                    e.Estado
+                })
+                .FirstOrDefaultAsync();
+
+            return Ok(new
+            {
+                cambios,
+                actualizado
+            });
+>>>>>>> Stashed changes
         }
 
         [HttpPost("importar-excel")]
