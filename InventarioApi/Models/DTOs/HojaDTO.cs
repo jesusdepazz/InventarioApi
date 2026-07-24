@@ -16,10 +16,17 @@ public class HojaEquipoDTO
     public string Ubicacion { get; set; }
     public string FechaIngreso { get; set; }
     public string Estado { get; set; }
+    public string? EquipoTipo { get; set; }
+    public string? Extension { get; set; }
+    public string? NumeroAsignado { get; set; }
+    public string? Observaciones { get; set; }
+    public string? Imei { get; set; }
 }
 
 public class HojaResponsabilidadDTO
-{
+{   
+    public int Version { get; set; }
+    public string? TipoHoja { get; set; }
     public string HojaNo { get; set; }
     public string Motivo { get; set; }
     public string? Comentarios { get; set; }
@@ -28,8 +35,9 @@ public class HojaResponsabilidadDTO
     public DateTime? FechaSolvencia { get; set; } = DateTime.Now;
     public DateTime FechaCreacion { get; set; } = DateTime.Now;
     public string Observaciones { get; set; }
-    public string Accesorios { get; set; }
+    public string? Accesorios { get; set; }
     public string JefeInmediato { get; set; }
+    public string? Proyecto { get; set; }
     public List<HojaEmpleadoDTO> Empleados { get; set; } = new();
     public List<HojaEquipoDTO> Equipos { get; set; } = new();
 }

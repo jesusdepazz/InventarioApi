@@ -21,13 +21,23 @@ namespace InventarioApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Traslado>>> GetAll()
         {
-            return await _context.Traslados.ToListAsync();
+            return await _context.Traslados
+                .Include(t => t.Equipos)
+                .Include(t => t.EmpleadoEntrega)
+                .Include(t => t.EmpleadoRecibe)
+                .OrderByDescending(t => t.FechaEmision)
+                .ToListAsync();
         }
 
         [HttpGet("{no}")]
         public async Task<ActionResult<Traslado>> GetByNo(string no)
         {
-            var traslado = await _context.Traslados.FindAsync(no);
+            var traslado = await _context.Traslados
+                .Include(t => t.Equipos)
+                .Include(t => t.EmpleadoEntrega)
+                .Include(t => t.EmpleadoRecibe)
+                .FirstOrDefaultAsync(t => t.No == no);
+
             if (traslado == null)
                 return NotFound();
 
@@ -40,57 +50,84 @@ namespace InventarioApi.Controllers
             if (nuevoTraslado == null || string.IsNullOrEmpty(nuevoTraslado.No))
                 return BadRequest("Datos de traslado inválidos.");
 
+            if (!nuevoTraslado.Equipos.Any())
+                return BadRequest("Debe agregar al menos un equipo.");
+
             if (await _context.Traslados.AnyAsync(t => t.No == nuevoTraslado.No))
                 return Conflict("Ya existe un traslado con ese número.");
 
-            var equipo = await _context.Equipos
-                .FirstOrDefaultAsync(e => e.Codificacion == nuevoTraslado.Equipo);
+            using var transaction = await _context.Database.BeginTransactionAsync();
 
-            if (equipo == null)
-                return NotFound($"No se encontró el equipo con codificación {nuevoTraslado.Equipo}");
+            try
+            {
+                _context.Traslados.Add(nuevoTraslado);
+                await _context.SaveChangesAsync();
 
-            equipo.Ubicacion = nuevoTraslado.UbicacionHasta;
+                foreach (var det in nuevoTraslado.Equipos)
+                {
+                    var equipo = await _context.Equipos
+                        .FirstOrDefaultAsync(e => e.Codificacion == det.Equipo);
 
-            equipo.FechaActualizacion = DateTime.UtcNow;
+                    if (equipo == null)
+                        return NotFound($"No se encontró el equipo {det.Equipo}");
 
-            _context.Traslados.Add(nuevoTraslado);
+                    equipo.Ubicacion = nuevoTraslado.UbicacionHasta;
+                    equipo.FechaActualizacion = DateTime.UtcNow;
+                }
 
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
 
-            return CreatedAtAction(nameof(GetByNo), new { no = nuevoTraslado.No }, nuevoTraslado);
+                return CreatedAtAction(nameof(GetByNo),
+                    new { no = nuevoTraslado.No },
+                    nuevoTraslado);
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
 
-
         [HttpPut("{no}")]
-        public async Task<IActionResult> Update(string no, [FromBody] Traslado updatedTraslado)
+        public async Task<IActionResult> Update(string no, [FromBody] Traslado updated)
         {
-            if (no != updatedTraslado.No)
+            if (no != updated.No)
                 return BadRequest("El número de traslado no coincide.");
 
-            var traslado = await _context.Traslados.FindAsync(no);
+            var traslado = await _context.Traslados
+                .Include(t => t.Equipos)
+                .Include(t => t.EmpleadoEntrega)
+                .Include(t => t.EmpleadoRecibe)
+                .FirstOrDefaultAsync(t => t.No == no);
+
             if (traslado == null)
                 return NotFound();
 
-            traslado.FechaEmision = updatedTraslado.FechaEmision;
-            traslado.CodigoEntrega = updatedTraslado.CodigoEntrega;
-            traslado.CodigoRecibe = updatedTraslado.CodigoEntrega;
-            traslado.Motivo = updatedTraslado.Motivo;
-            traslado.UbicacionDesde = updatedTraslado.UbicacionDesde;
-            traslado.UbicacionHasta = updatedTraslado.UbicacionHasta;
-            traslado.Status = updatedTraslado.Status;
-            traslado.Equipo = updatedTraslado.Equipo;
-            traslado.Observaciones = updatedTraslado.Observaciones;
+            traslado.FechaEmision = updated.FechaEmision;
+            traslado.Status = updated.Status;
+            traslado.Motivo = updated.Motivo;
+            traslado.Observaciones = updated.Observaciones;
+            traslado.UbicacionDesde = updated.UbicacionDesde;
+            traslado.UbicacionHasta = updated.UbicacionHasta;
+            traslado.EmpleadoEntrega = updated.EmpleadoEntrega;
+            traslado.EmpleadoRecibe = updated.EmpleadoRecibe;
+            _context.TrasladoEquipos.RemoveRange(traslado.Equipos);
+            traslado.Equipos = updated.Equipos;
 
-            _context.Entry(traslado).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-
             return NoContent();
         }
 
         [HttpDelete("{no}")]
         public async Task<IActionResult> Delete(string no)
         {
-            var traslado = await _context.Traslados.FindAsync(no);
+            var traslado = await _context.Traslados
+                .Include(t => t.Equipos)
+                .Include(t => t.EmpleadoEntrega)
+                .Include(t => t.EmpleadoRecibe)
+                .FirstOrDefaultAsync(t => t.No == no);
+
             if (traslado == null)
                 return NotFound();
 
@@ -99,6 +136,5 @@ namespace InventarioApi.Controllers
 
             return NoContent();
         }
-
     }
 }

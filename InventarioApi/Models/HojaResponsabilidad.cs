@@ -2,8 +2,10 @@
 using InventarioApi.Models;
 
 public class HojaResponsabilidad
-{
+{   
     public int Id { get; set; }
+    public int Version { get; set; }
+    public string? TipoHoja { get; set; }
     public string HojaNo { get; set; }
     public string Motivo { get; set; }
     public string? Comentarios { get; set; }
@@ -12,8 +14,9 @@ public class HojaResponsabilidad
     public DateTime? FechaSolvencia { get; set; } = DateTime.Now;
     public string Observaciones { get; set; }
     public DateTime FechaCreacion { get; set; } = DateTime.Now;
-    public string Accesorios { get; set; }
+    public string? Accesorios { get; set; }
     public string JefeInmediato { get; set; }
+    public string? Proyecto { get; set; }
     public List<HojaSolvencia> Solvencias { get; set; } = new();
     public List<HojaEmpleado> Empleados { get; set; } = new();
     public List<HojaEquipo> Equipos { get; set; } = new();
@@ -44,6 +47,11 @@ public class HojaEquipo
     public string Ubicacion { get; set; }
     public string FechaIngreso { get; set; }
     public string Estado { get; set; }
+    public string? EquipoTipo { get; set; }
+    public string? Extension { get; set; }
+    public string? NumeroAsignado { get; set; }
+    public string? Observaciones { get; set; }
+    public string? Imei { get; set; }
 
     [JsonIgnore]
     public HojaResponsabilidad HojaResponsabilidad { get; set; }

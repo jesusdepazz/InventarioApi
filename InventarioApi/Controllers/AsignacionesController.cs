@@ -18,7 +18,20 @@ public class AsignacionesController : ControllerBase
     public async Task<IActionResult> CrearAsignacion([FromBody] Asignacion asignacion)
     {
         _context.Asignaciones.Add(asignacion);
+
+        if (!string.IsNullOrWhiteSpace(asignacion.Ubicacion))
+        {
+            var equipo = await _context.Equipos
+                .FirstOrDefaultAsync(e => e.Codificacion == asignacion.CodificacionEquipo);
+
+            if (equipo != null)
+            {
+                equipo.Ubicacion = asignacion.Ubicacion;
+            }
+        }
+
         await _context.SaveChangesAsync();
+
         return Ok(asignacion);
     }
 
@@ -43,6 +56,30 @@ public class AsignacionesController : ControllerBase
         await _context.SaveChangesAsync();
 
         return NoContent();
+    }
+
+    [HttpGet("empleado/{codigoEmpleado}/equipos")]
+    public async Task<IActionResult> ObtenerEquiposPorEmpleado(string codigoEmpleado)
+    {
+        var equipos = await (
+            from a in _context.Asignaciones
+            join e in _context.Equipos
+                on a.CodificacionEquipo equals e.Codificacion
+            where a.CodigoEmpleado == codigoEmpleado
+            select new
+            {
+                e.Codificacion,
+                e.Marca,
+                e.Modelo,
+                e.Serie,
+                e.TipoEquipo,
+                e.Ubicacion,
+                e.FechaIngreso,
+                e.Estado
+            }
+        ).ToListAsync();
+
+        return Ok(equipos);
     }
 
 }
