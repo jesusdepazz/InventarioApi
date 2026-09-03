@@ -6,6 +6,11 @@ using Microsoft.EntityFrameworkCore;
 [Route("api/[controller]")]
 public class HojasResponsabilidadController : ControllerBase
 {
+    private static readonly System.Text.Json.JsonSerializerOptions SnapshotJsonOptions = new()
+    {
+        PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase
+    };
+
     private readonly InventarioContext _context;
 
     public HojasResponsabilidadController(InventarioContext context)
@@ -279,11 +284,12 @@ public class HojasResponsabilidadController : ControllerBase
             HojaResponsabilidadId = hoja.Id,
             NumeroVersion = hoja.Version,
             FechaGuardado = DateTime.Now,
-            DatosJson = System.Text.Json.JsonSerializer.Serialize(snapshot)
+            DatosJson = System.Text.Json.JsonSerializer.Serialize(snapshot, SnapshotJsonOptions)
         };
         _context.HojaResponsabilidadVersiones.Add(version);
 
         hoja.HojaNo = dto.HojaNo;
+        hoja.TipoHoja = dto.TipoHoja;
         hoja.Motivo = dto.Motivo;
         hoja.Comentarios = dto.Comentarios;
         hoja.Estado = dto.Estado;
@@ -356,6 +362,41 @@ public class HojasResponsabilidadController : ControllerBase
             .ToListAsync();
 
         return Ok(versiones);
+    }
+
+    [HttpDelete("{id}/versiones/{versionId}")]
+    public async Task<IActionResult> EliminarVersion(int id, int versionId)
+    {
+        var hoja = await _context.HojasResponsabilidad.FindAsync(id);
+        if (hoja == null)
+            return NotFound(new { mensaje = "No se encontró la hoja especificada." });
+
+        var version = await _context.HojaResponsabilidadVersiones
+            .FirstOrDefaultAsync(v => v.Id == versionId && v.HojaResponsabilidadId == id);
+
+        if (version == null)
+            return NotFound(new { mensaje = "No se encontró la versión especificada." });
+
+        var numeroEliminado = version.NumeroVersion;
+
+        _context.HojaResponsabilidadVersiones.Remove(version);
+
+        // Renumerar las versiones posteriores para que queden consecutivas.
+        var posteriores = await _context.HojaResponsabilidadVersiones
+            .Where(v => v.HojaResponsabilidadId == id && v.NumeroVersion > numeroEliminado)
+            .ToListAsync();
+
+        foreach (var v in posteriores)
+        {
+            v.NumeroVersion -= 1;
+        }
+
+        if (hoja.Version > 0)
+            hoja.Version -= 1;
+
+        await _context.SaveChangesAsync();
+
+        return Ok(new { mensaje = "Versión eliminada correctamente.", version = hoja.Version });
     }
 
 }

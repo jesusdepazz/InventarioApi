@@ -14,6 +14,8 @@ namespace Inventory.Data
         public DbSet<EmpleadoInfo> EmpleadosInfo { get; set; }
         public DbSet<Departamento> Departamentos { get; set; }
         public DbSet<Asignacion> Asignaciones { get; set; }
+        public DbSet<AsignacionComunal> AsignacionesComunales { get; set; }
+        public DbSet<AsignacionComunalVersion> AsignacionComunalVersiones { get; set; }
         public DbSet<Mantenimiento> Mantenimientos { get; set; }
         public DbSet<Solicitud> Solicitudes { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
@@ -83,6 +85,15 @@ namespace Inventory.Data
                 entity.HasOne(v => v.HojaResponsabilidad)
                       .WithMany()
                       .HasForeignKey(v => v.HojaResponsabilidadId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<AsignacionComunalVersion>(entity =>
+            {
+                entity.HasKey(v => v.Id);
+                entity.HasOne(v => v.AsignacionComunal)
+                      .WithMany()
+                      .HasForeignKey(v => v.AsignacionComunalId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
 

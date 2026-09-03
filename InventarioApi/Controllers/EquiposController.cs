@@ -22,109 +22,38 @@ namespace InventoryApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<object>>> GetEquipos()
         {
-            var equipos = await _context.Equipos.ToListAsync();
-
-            var hojas = await _context.HojasResponsabilidad
-                .Include(h => h.Equipos)
-                .Include(h => h.Empleados)
-                .ToListAsync();
-
-            var asignaciones = await _context.Asignaciones
-                .Select(a => new
+            var equiposConAsignaciones = await _context.Equipos
+                .Select(e => new
                 {
-                    a.CodificacionEquipo,
-                    a.CodigoEmpleado,
-                    a.NombreEmpleado,
-                    a.Puesto
-                })
-                .ToListAsync();
+                    e.Id,
+                    e.OrdenCompra,
+                    e.Factura,
+                    e.Proveedor,
+                    e.FechaIngreso,
+                    e.HojaNo,
+                    e.FechaActualizacion,
+                    e.ResponsableAnterior,
+                    e.Codificacion,
+                    e.Estado,
+                    e.TipoEquipo,
+                    e.Marca,
+                    e.Modelo,
+                    e.Serie,
+                    e.Extension,
+                    e.Ubicacion,
+                    e.Comentarios,
+                    e.Observaciones,
 
-            // Asignaciones derivadas de hojas externas (TipoHoja == "Externo")
-            var asignacionesExternas = hojas
-                .Where(h => h.TipoHoja == "Externo")
-                .SelectMany(h => h.Equipos.Select(eq => new
-                {
-                    CodificacionEquipo = eq.Codificacion,
-                    CodigoEmpleado     = h.Empleados.FirstOrDefault()?.EmpleadoId  ?? "—",
-                    NombreEmpleado     = h.Empleados.FirstOrDefault()?.Nombre      ?? "—",
-                    Puesto             = h.Empleados.FirstOrDefault()?.Puesto      ?? "—",
-                }))
-                .ToList();
-
-            var todasAsignaciones = asignaciones
-                .Select(a => new
-                {
-                    a.CodificacionEquipo,
-                    a.CodigoEmpleado,
-                    a.NombreEmpleado,
-                    a.Puesto
-                })
-                .Concat(asignacionesExternas
-                    // evitar duplicados si el externo también tiene Asignacion manual
-                    .Where(ext => !asignaciones.Any(a =>
-                        a.CodificacionEquipo?.Trim().ToUpper() == ext.CodificacionEquipo?.Trim().ToUpper() &&
-                        a.CodigoEmpleado == ext.CodigoEmpleado))
-                    .Select(ext => new
-                    {
-                        ext.CodificacionEquipo,
-                        ext.CodigoEmpleado,
-                        ext.NombreEmpleado,
-                        ext.Puesto
-                    }))
-                .ToList();
-
-            var equiposConAsignaciones = equipos
-                .Select(e =>
-                {
-                    var hojaAsignada = hojas.FirstOrDefault(h =>
-                        h.Equipos.Any(eq =>
-                            !string.IsNullOrWhiteSpace(eq.Codificacion) &&
-                            !string.IsNullOrWhiteSpace(e.Codificacion) &&
-                            eq.Codificacion.Trim().ToUpper() == e.Codificacion.Trim().ToUpper()
-                        )
-                    );
-
-                    var asignacionesEquipo = todasAsignaciones
-                        .Where(a =>
-                            !string.IsNullOrWhiteSpace(a.CodificacionEquipo) &&
-                            !string.IsNullOrWhiteSpace(e.Codificacion) &&
-                            a.CodificacionEquipo.Trim().ToUpper() == e.Codificacion.Trim().ToUpper()
-                        )
-                        .Select(a => new
-                        {
+                    Asignaciones = _context.Asignaciones
+                        .Where(a => a.CodificacionEquipo == e.Codificacion)
+                        .Select(a => new {
                             a.CodigoEmpleado,
                             a.NombreEmpleado,
                             a.Puesto
                         })
-                        .ToList();
-
-                    return new
-                    {
-                        e.Id,
-                        e.OrdenCompra,
-                        e.Factura,
-                        e.Proveedor,
-                        e.FechaIngreso,
-                        HojaNo = hojaAsignada?.HojaNo ?? e.HojaNo,
-                        e.FechaActualizacion,
-                        e.ResponsableAnterior,
-                        e.Codificacion,
-                        e.Estado,
-                        e.TipoEquipo,
-                        e.Marca,
-                        e.Modelo,
-                        e.Serie,
-                        e.Extension,
-                        e.NumeroAsignado,
-                        e.Imei,
-                        e.EquipoTipo,
-                        e.Ubicacion,
-                        e.Comentarios,
-                        e.Observaciones,
-                        Asignaciones = asignacionesEquipo
-                    };
+                        .ToList()
                 })
-                .ToList();
+                .ToListAsync();
 
             return Ok(equiposConAsignaciones);
         }
@@ -153,7 +82,6 @@ namespace InventoryApi.Controllers
                 .Select(e => new EquipoDTO
                 {
                     Id = e.Id,
-                    OrdenCompra = e.OrdenCompra,
                     Codificacion = e.Codificacion,
                     Marca = e.Marca,
                     Modelo = e.Modelo,
@@ -161,11 +89,7 @@ namespace InventoryApi.Controllers
                     Ubicacion = e.Ubicacion,
                     Estado = e.Estado,
                     TipoEquipo = e.TipoEquipo,
-                    EquipoTipo = e.EquipoTipo,
-                    FechaIngreso = e.FechaIngreso,
-                    Extension = e.Extension,
-                    NumeroAsignado = e.NumeroAsignado,
-                    Imei = e.Imei,
+                    FechaIngreso = e.FechaIngreso
                 })
                 .FirstOrDefaultAsync();
 
@@ -174,6 +98,7 @@ namespace InventoryApi.Controllers
 
             return Ok(equipo);
         }
+
 
         [HttpPost]
         public async Task<ActionResult<Equipo>> PostEquipo([FromForm] EquipoDTO dto)
@@ -206,9 +131,6 @@ namespace InventoryApi.Controllers
                 Modelo = dto.Modelo,
                 Serie = dto.Serie,
                 Extension = dto.Extension,
-                NumeroAsignado = dto.NumeroAsignado,
-                Imei = dto.Imei,
-                EquipoTipo = dto.EquipoTipo,
                 Ubicacion = dto.Ubicacion,
                 Comentarios = dto.Comentarios,
                 Observaciones = dto.Observaciones,
@@ -319,11 +241,10 @@ namespace InventoryApi.Controllers
                             Modelo = row[10]?.ToString(),
                             Serie = row[11]?.ToString(),
                             Extension = row[12]?.ToString(),
-                            Imei = row[13]?.ToString(),
-                            Ubicacion = row[14]?.ToString(),
-                            ResponsableAnterior = row[15]?.ToString(),
-                            Comentarios = row[16]?.ToString(),
-                            Observaciones = row[17]?.ToString()
+                            Ubicacion = row[13]?.ToString(),
+                            ResponsableAnterior = row[14]?.ToString(),
+                            Comentarios = row[15]?.ToString(),
+                            Observaciones = row[16]?.ToString()
                         };
 
                         equipos.Add(equipo);
