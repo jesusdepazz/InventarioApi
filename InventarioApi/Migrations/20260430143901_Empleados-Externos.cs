@@ -11,29 +11,31 @@ namespace InventarioApi.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql(@"IF OBJECT_ID(N'dbo.EmpleadosExternos', N'U') IS NULL
-BEGIN
-    CREATE TABLE [EmpleadosExternos] (
-        [Id] int NOT NULL IDENTITY,
-        [CodigoEmpleado] nvarchar(20) NOT NULL,
-        [Nombre] nvarchar(150) NOT NULL,
-        [Puesto] nvarchar(100) NOT NULL,
-        [Documento] nvarchar(30) NOT NULL,
-        [Telefono] nvarchar(20) NULL,
-        [FechaRegistro] datetime2 NOT NULL,
-        [Activo] bit NOT NULL,
-        CONSTRAINT [PK_EmpleadosExternos] PRIMARY KEY ([Id])
-    );
-END");
+            migrationBuilder.CreateTable(
+                name: "EmpleadosExternos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CodigoEmpleado = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Nombre = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    Puesto = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Documento = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Telefono = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    FechaRegistro = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmpleadosExternos", x => x.Id);
+                });
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql(@"IF OBJECT_ID(N'dbo.EmpleadosExternos', N'U') IS NOT NULL
-BEGIN
-    DROP TABLE [EmpleadosExternos];
-END");
+            migrationBuilder.DropTable(
+                name: "EmpleadosExternos");
         }
     }
 }

@@ -27,22 +27,15 @@ namespace Inventory.Data
         public DbSet<TrasladoEquipo> TrasladoEquipos { get; set; }
         public DbSet<TrasladoEmpleadoEntrega> TrasladoEmpleadoEntregas { get; set; }
         public DbSet<TrasladoEmpleadoRecibe> TrasladoEmpleadoRecibes { get; set; }
-        // Suministros y entradas/salidas eliminados como DbSet (módulo removido)
+        public DbSet<Suministro> Suministros { get; set; }
+        public DbSet<EntradaSuministro> EntradaSuministros { get; set; }
+        public DbSet<SalidaSuministro> SalidaSuministros { get; set; }
         public DbSet<BajaActivo> BajaActivos { get; set; }
-        // EmpleadosExternos eliminado como DbSet (módulo removido)
+        public DbSet<EmpleadoExterno> EmpleadosExternos { get; set; }
         public DbSet<TrasladoRetorno> TrasladoRetornos { get; set; }
         public DbSet<TrasladoRetornoEquipo> TrasladoRetornEquipos { get; set; }
         public DbSet<TrasladoRetornoEmpleado> TrasladoRetornoEmpleados { get; set; }
         public DbSet<HojaResponsabilidadVersion> HojaResponsabilidadVersiones { get; set; }
-        // Nuevos módulos añadidos
-        public DbSet<Alerta> Alertas { get; set; }
-        public DbSet<BitacoraFalla> BitacoraFallas { get; set; }
-        public DbSet<PolizaSeguro> PolizasSeguro { get; set; }
-        public DbSet<ReporteEstadoFisico> ReportesEstadoFisico { get; set; }
-        public DbSet<CatalogoEquipo> CatalogoEquipos { get; set; }
-        public DbSet<TomaFisica> TomasFisicas { get; set; }
-        public DbSet<TomaFisicaItem> TomaFisicaItems { get; set; }
-        public DbSet<FaltanteSobrante> FaltantesSobrantes { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

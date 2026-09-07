@@ -11,80 +11,112 @@ namespace InventarioApi.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         { 
-            // Crear tabla Traslados solo si no existe (evita error si ya existe en la BD)
-            migrationBuilder.Sql(@"IF OBJECT_ID(N'dbo.Traslados', N'U') IS NULL
-BEGIN
-    CREATE TABLE [Traslados] (
-        [Id] int NOT NULL IDENTITY,
-        [No] nvarchar(max) NOT NULL,
-        [FechaEmision] datetime2 NOT NULL,
-        [Status] nvarchar(max) NOT NULL,
-        [Motivo] nvarchar(max) NOT NULL,
-        [Observaciones] nvarchar(max) NOT NULL,
-        [UbicacionDesde] nvarchar(max) NOT NULL,
-        [UbicacionHasta] nvarchar(max) NOT NULL,
-        CONSTRAINT [PK_Traslados] PRIMARY KEY ([Id])
-    );
-END");
+            migrationBuilder.CreateTable(
+                name: "Traslados",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    No = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaEmision = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Motivo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Observaciones = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UbicacionDesde = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UbicacionHasta = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Traslados", x => x.Id);
+                });
 
 
-            migrationBuilder.Sql(@"IF OBJECT_ID(N'dbo.TrasladoEmpleadoEntregas', N'U') IS NULL
-BEGIN
-    CREATE TABLE [TrasladoEmpleadoEntregas] (
-        [Id] int NOT NULL IDENTITY,
-        [TrasladoId] int NOT NULL,
-        [Codigo] nvarchar(max) NOT NULL,
-        [Nombre] nvarchar(max) NOT NULL,
-        [Puesto] nvarchar(max) NOT NULL,
-        [Departamento] nvarchar(max) NOT NULL,
-        CONSTRAINT [PK_TrasladoEmpleadoEntregas] PRIMARY KEY ([Id]),
-        CONSTRAINT [FK_TrasladoEmpleadoEntregas_Traslados_TrasladoId] FOREIGN KEY ([TrasladoId]) REFERENCES [Traslados] ([Id]) ON DELETE CASCADE
-    );
-END");
+            migrationBuilder.CreateTable(
+                name: "TrasladoEmpleadoEntregas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TrasladoId = table.Column<int>(type: "int", nullable: false),
+                    Codigo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Puesto = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Departamento = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TrasladoEmpleadoEntregas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TrasladoEmpleadoEntregas_Traslados_TrasladoId",
+                        column: x => x.TrasladoId,
+                        principalTable: "Traslados",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
-            migrationBuilder.Sql(@"IF OBJECT_ID(N'dbo.TrasladoEmpleadoRecibes', N'U') IS NULL
-BEGIN
-    CREATE TABLE [TrasladoEmpleadoRecibes] (
-        [Id] int NOT NULL IDENTITY,
-        [TrasladoId] int NOT NULL,
-        [Codigo] nvarchar(max) NOT NULL,
-        [Nombre] nvarchar(max) NOT NULL,
-        [Puesto] nvarchar(max) NOT NULL,
-        [Departamento] nvarchar(max) NOT NULL,
-        CONSTRAINT [PK_TrasladoEmpleadoRecibes] PRIMARY KEY ([Id]),
-        CONSTRAINT [FK_TrasladoEmpleadoRecibes_Traslados_TrasladoId] FOREIGN KEY ([TrasladoId]) REFERENCES [Traslados] ([Id]) ON DELETE CASCADE
-    );
-END");
+            migrationBuilder.CreateTable(
+                name: "TrasladoEmpleadoRecibes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TrasladoId = table.Column<int>(type: "int", nullable: false),
+                    Codigo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Puesto = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Departamento = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TrasladoEmpleadoRecibes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TrasladoEmpleadoRecibes_Traslados_TrasladoId",
+                        column: x => x.TrasladoId,
+                        principalTable: "Traslados",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
-            migrationBuilder.Sql(@"IF OBJECT_ID(N'dbo.TrasladoEquipos', N'U') IS NULL
-BEGIN
-    CREATE TABLE [TrasladoEquipos] (
-        [Id] int NOT NULL IDENTITY,
-        [TrasladoId] int NOT NULL,
-        [Equipo] nvarchar(max) NOT NULL,
-        [DescripcionEquipo] nvarchar(max) NOT NULL,
-        [Marca] nvarchar(max) NOT NULL,
-        [Modelo] nvarchar(max) NOT NULL,
-        [Serie] nvarchar(max) NOT NULL,
-        CONSTRAINT [PK_TrasladoEquipos] PRIMARY KEY ([Id]),
-        CONSTRAINT [FK_TrasladoEquipos_Traslados_TrasladoId] FOREIGN KEY ([TrasladoId]) REFERENCES [Traslados] ([Id]) ON DELETE CASCADE
-    );
-END");
+            migrationBuilder.CreateTable(
+                name: "TrasladoEquipos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TrasladoId = table.Column<int>(type: "int", nullable: false),
+                    Equipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DescripcionEquipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Marca = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Modelo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Serie = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TrasladoEquipos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TrasladoEquipos_Traslados_TrasladoId",
+                        column: x => x.TrasladoId,
+                        principalTable: "Traslados",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
-            migrationBuilder.Sql(@"IF NOT EXISTS (SELECT name FROM sys.indexes WHERE name = 'IX_TrasladoEmpleadoEntregas_TrasladoId' AND object_id = OBJECT_ID('dbo.TrasladoEmpleadoEntregas'))
-BEGIN
-    CREATE UNIQUE INDEX [IX_TrasladoEmpleadoEntregas_TrasladoId] ON [TrasladoEmpleadoEntregas] ([TrasladoId]);
-END");
+            migrationBuilder.CreateIndex(
+                name: "IX_TrasladoEmpleadoEntregas_TrasladoId",
+                table: "TrasladoEmpleadoEntregas",
+                column: "TrasladoId",
+                unique: true);
 
-            migrationBuilder.Sql(@"IF NOT EXISTS (SELECT name FROM sys.indexes WHERE name = 'IX_TrasladoEmpleadoRecibes_TrasladoId' AND object_id = OBJECT_ID('dbo.TrasladoEmpleadoRecibes'))
-BEGIN
-    CREATE UNIQUE INDEX [IX_TrasladoEmpleadoRecibes_TrasladoId] ON [TrasladoEmpleadoRecibes] ([TrasladoId]);
-END");
+            migrationBuilder.CreateIndex(
+                name: "IX_TrasladoEmpleadoRecibes_TrasladoId",
+                table: "TrasladoEmpleadoRecibes",
+                column: "TrasladoId",
+                unique: true);
 
-            migrationBuilder.Sql(@"IF NOT EXISTS (SELECT name FROM sys.indexes WHERE name = 'IX_TrasladoEquipos_TrasladoId' AND object_id = OBJECT_ID('dbo.TrasladoEquipos'))
-BEGIN
-    CREATE INDEX [IX_TrasladoEquipos_TrasladoId] ON [TrasladoEquipos] ([TrasladoId]);
-END");
+            migrationBuilder.CreateIndex(
+                name: "IX_TrasladoEquipos_TrasladoId",
+                table: "TrasladoEquipos",
+                column: "TrasladoId");
 
         }
 

@@ -10,29 +10,30 @@ namespace InventarioApi.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql(@"IF COL_LENGTH('dbo.HojasResponsabilidad', 'Proyecto') IS NULL
-BEGIN
-    ALTER TABLE [HojasResponsabilidad] ADD [Proyecto] nvarchar(max) NULL;
-END");
+            migrationBuilder.AddColumn<string>(
+                name: "Proyecto",
+                table: "HojasResponsabilidad",
+                type: "nvarchar(max)",
+                nullable: true);
 
-            migrationBuilder.Sql(@"IF COL_LENGTH('dbo.EmpleadosExternos', 'Proyecto') IS NULL
-BEGIN
-    ALTER TABLE [EmpleadosExternos] ADD [Proyecto] nvarchar(150) NULL;
-END");
+            migrationBuilder.AddColumn<string>(
+                name: "Proyecto",
+                table: "EmpleadosExternos",
+                type: "nvarchar(150)",
+                maxLength: 150,
+                nullable: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql(@"IF COL_LENGTH('dbo.HojasResponsabilidad', 'Proyecto') IS NOT NULL
-BEGIN
-    ALTER TABLE [HojasResponsabilidad] DROP COLUMN [Proyecto];
-END");
+            migrationBuilder.DropColumn(
+                name: "Proyecto",
+                table: "HojasResponsabilidad");
 
-            migrationBuilder.Sql(@"IF COL_LENGTH('dbo.EmpleadosExternos', 'Proyecto') IS NOT NULL
-BEGIN
-    ALTER TABLE [EmpleadosExternos] DROP COLUMN [Proyecto];
-END");
+            migrationBuilder.DropColumn(
+                name: "Proyecto",
+                table: "EmpleadosExternos");
         }
     }
 }

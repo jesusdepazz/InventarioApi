@@ -10,19 +10,19 @@ namespace InventarioApi.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql(@"IF COL_LENGTH('dbo.Asignaciones', 'Ubicacion') IS NULL
-BEGIN
-    ALTER TABLE [Asignaciones] ADD [Ubicacion] nvarchar(max) NULL;
-END");
+            migrationBuilder.AddColumn<string>(
+                name: "Ubicacion",
+                table: "Asignaciones",
+                type: "nvarchar(max)",
+                nullable: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql(@"IF COL_LENGTH('dbo.Asignaciones', 'Ubicacion') IS NOT NULL
-BEGIN
-    ALTER TABLE [Asignaciones] DROP COLUMN [Ubicacion];
-END");
+            migrationBuilder.DropColumn(
+                name: "Ubicacion",
+                table: "Asignaciones");
         }
     }
 }

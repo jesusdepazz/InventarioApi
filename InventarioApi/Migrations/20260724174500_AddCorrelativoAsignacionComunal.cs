@@ -10,19 +10,19 @@ namespace InventarioApi.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql(@"IF COL_LENGTH('dbo.AsignacionesComunales', 'Correlativo') IS NULL
-BEGIN
-    ALTER TABLE [AsignacionesComunales] ADD [Correlativo] nvarchar(max) NULL;
-END");
+            migrationBuilder.AddColumn<string>(
+                name: "Correlativo",
+                table: "AsignacionesComunales",
+                type: "nvarchar(max)",
+                nullable: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql(@"IF COL_LENGTH('dbo.AsignacionesComunales', 'Correlativo') IS NOT NULL
-BEGIN
-    ALTER TABLE [AsignacionesComunales] DROP COLUMN [Correlativo];
-END");
+            migrationBuilder.DropColumn(
+                name: "Correlativo",
+                table: "AsignacionesComunales");
         }
     }
 }

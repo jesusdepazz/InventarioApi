@@ -11,10 +11,12 @@ namespace InventarioApi.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql(@"IF COL_LENGTH('dbo.AsignacionesComunales', 'Version') IS NULL
-BEGIN
-    ALTER TABLE [AsignacionesComunales] ADD [Version] int NOT NULL DEFAULT(0);
-END");
+            migrationBuilder.AddColumn<int>(
+                name: "Version",
+                table: "AsignacionesComunales",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
 
             migrationBuilder.CreateTable(
                 name: "AsignacionComunalVersiones",
@@ -50,10 +52,9 @@ END");
             migrationBuilder.DropTable(
                 name: "AsignacionComunalVersiones");
 
-            migrationBuilder.Sql(@"IF COL_LENGTH('dbo.AsignacionesComunales', 'Version') IS NOT NULL
-BEGIN
-    ALTER TABLE [AsignacionesComunales] DROP COLUMN [Version];
-END");
+            migrationBuilder.DropColumn(
+                name: "Version",
+                table: "AsignacionesComunales");
         }
     }
 }
