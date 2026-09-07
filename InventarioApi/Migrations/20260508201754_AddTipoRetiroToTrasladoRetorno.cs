@@ -58,19 +58,19 @@ namespace InventarioApi.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)");
 
-            migrationBuilder.AddColumn<string>(
-                name: "TipoRetiro",
-                table: "TrasladoRetornos",
-                type: "nvarchar(max)",
-                nullable: true);
+            migrationBuilder.Sql(@"IF COL_LENGTH('dbo.TrasladoRetornos', 'TipoRetiro') IS NULL
+BEGIN
+    ALTER TABLE [TrasladoRetornos] ADD [TipoRetiro] nvarchar(max) NULL;
+END");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "TipoRetiro",
-                table: "TrasladoRetornos");
+            migrationBuilder.Sql(@"IF COL_LENGTH('dbo.TrasladoRetornos', 'TipoRetiro') IS NOT NULL
+BEGIN
+    ALTER TABLE [TrasladoRetornos] DROP COLUMN [TipoRetiro];
+END");
 
             migrationBuilder.AlterColumn<string>(
                 name: "TelefonoProveedor",

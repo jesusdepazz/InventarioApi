@@ -10,19 +10,19 @@ namespace InventarioApi.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Observaciones",
-                table: "HojaEquipos",
-                type: "nvarchar(max)",
-                nullable: true);
+            migrationBuilder.Sql(@"IF COL_LENGTH('dbo.HojaEquipos', 'Observaciones') IS NULL
+BEGIN
+    ALTER TABLE [HojaEquipos] ADD [Observaciones] nvarchar(max) NULL;
+END");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Observaciones",
-                table: "HojaEquipos");
+            migrationBuilder.Sql(@"IF COL_LENGTH('dbo.HojaEquipos', 'Observaciones') IS NOT NULL
+BEGIN
+    ALTER TABLE [HojaEquipos] DROP COLUMN [Observaciones];
+END");
         }
     }
 }

@@ -36,6 +36,7 @@ namespace InventoryApi.Controllers
                     e.Codificacion,
                     e.Estado,
                     e.TipoEquipo,
+                    e.Color,
                     e.Marca,
                     e.Modelo,
                     e.Serie,
@@ -86,6 +87,7 @@ namespace InventoryApi.Controllers
                     Marca = e.Marca,
                     Modelo = e.Modelo,
                     Serie = e.Serie,
+                        Color = e.Color,
                     Ubicacion = e.Ubicacion,
                     Estado = e.Estado,
                     TipoEquipo = e.TipoEquipo,
@@ -127,6 +129,7 @@ namespace InventoryApi.Controllers
                 Codificacion = dto.Codificacion,
                 Estado = dto.Estado,
                 TipoEquipo = dto.TipoEquipo,
+                Color = dto.Color,
                 Marca = dto.Marca,
                 Modelo = dto.Modelo,
                 Serie = dto.Serie,
@@ -175,6 +178,7 @@ namespace InventoryApi.Controllers
             equipo.Marca = dto.Marca;
             equipo.Modelo = dto.Modelo;
             equipo.Serie = dto.Serie;
+            equipo.Color = dto.Color;
             equipo.Ubicacion = dto.Ubicacion;
             equipo.Estado = dto.Estado;
             equipo.FechaActualizacion = DateTime.UtcNow;
@@ -192,6 +196,7 @@ namespace InventoryApi.Controllers
                     e.Id,
                     e.OrdenCompra,
                     e.Marca,
+                    e.Color,
                     e.Modelo,
                     e.Serie,
                     e.Ubicacion,

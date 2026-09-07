@@ -18,56 +18,51 @@ namespace InventarioApi.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)");
 
-            migrationBuilder.AddColumn<string>(
-                name: "TipoHoja",
-                table: "HojasResponsabilidad",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
+            // Agregar columna TipoHoja solo si no existe (evita errores si ya está en la BD)
+            migrationBuilder.Sql(@"IF COL_LENGTH('dbo.HojasResponsabilidad', 'TipoHoja') IS NULL
+BEGIN
+    ALTER TABLE [HojasResponsabilidad] ADD [TipoHoja] nvarchar(max) NOT NULL DEFAULT('');
+END");
 
-            migrationBuilder.AddColumn<string>(
-                name: "Extension",
-                table: "HojaEquipos",
-                type: "nvarchar(max)",
-                nullable: true);
+            migrationBuilder.Sql(@"IF COL_LENGTH('dbo.HojaEquipos', 'Extension') IS NULL
+BEGIN
+    ALTER TABLE [HojaEquipos] ADD [Extension] nvarchar(max) NULL;
+END");
 
-            migrationBuilder.AddColumn<string>(
-                name: "Imei",
-                table: "HojaEquipos",
-                type: "nvarchar(max)",
-                nullable: true);
+            migrationBuilder.Sql(@"IF COL_LENGTH('dbo.HojaEquipos', 'Imei') IS NULL
+BEGIN
+    ALTER TABLE [HojaEquipos] ADD [Imei] nvarchar(max) NULL;
+END");
 
-            migrationBuilder.AddColumn<string>(
-                name: "NumeroAsignado",
-                table: "HojaEquipos",
-                type: "nvarchar(max)",
-                nullable: true);
+            migrationBuilder.Sql(@"IF COL_LENGTH('dbo.HojaEquipos', 'NumeroAsignado') IS NULL
+BEGIN
+    ALTER TABLE [HojaEquipos] ADD [NumeroAsignado] nvarchar(max) NULL;
+END");
 
-            migrationBuilder.AddColumn<string>(
-                name: "EquipoTipo",
-                table: "Equipos",
-                type: "nvarchar(max)",
-                nullable: true);
+            migrationBuilder.Sql(@"IF COL_LENGTH('dbo.Equipos', 'EquipoTipo') IS NULL
+BEGIN
+    ALTER TABLE [Equipos] ADD [EquipoTipo] nvarchar(max) NULL;
+END");
 
-            migrationBuilder.AddColumn<string>(
-                name: "Imei",
-                table: "Equipos",
-                type: "nvarchar(max)",
-                nullable: true);
+            migrationBuilder.Sql(@"IF COL_LENGTH('dbo.Equipos', 'Imei') IS NULL
+BEGIN
+    ALTER TABLE [Equipos] ADD [Imei] nvarchar(max) NULL;
+END");
 
-            migrationBuilder.AddColumn<string>(
-                name: "NumeroAsignado",
-                table: "Equipos",
-                type: "nvarchar(max)",
-                nullable: true);
+            migrationBuilder.Sql(@"IF COL_LENGTH('dbo.Equipos', 'NumeroAsignado') IS NULL
+BEGIN
+    ALTER TABLE [Equipos] ADD [NumeroAsignado] nvarchar(max) NULL;
+END");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "TipoHoja",
-                table: "HojasResponsabilidad");
+            // Eliminar columna solo si existe
+            migrationBuilder.Sql(@"IF COL_LENGTH('dbo.HojasResponsabilidad', 'TipoHoja') IS NOT NULL
+BEGIN
+    ALTER TABLE [HojasResponsabilidad] DROP COLUMN [TipoHoja];
+END");
 
             migrationBuilder.DropColumn(
                 name: "Extension",

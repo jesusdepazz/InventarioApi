@@ -10,20 +10,19 @@ namespace InventarioApi.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "Version",
-                table: "HojasResponsabilidad",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
+            migrationBuilder.Sql(@"IF COL_LENGTH('dbo.HojasResponsabilidad', 'Version') IS NULL
+BEGIN
+    ALTER TABLE [HojasResponsabilidad] ADD [Version] int NOT NULL DEFAULT(0);
+END");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Version",
-                table: "HojasResponsabilidad");
+            migrationBuilder.Sql(@"IF COL_LENGTH('dbo.HojasResponsabilidad', 'Version') IS NOT NULL
+BEGIN
+    ALTER TABLE [HojasResponsabilidad] DROP COLUMN [Version];
+END");
         }
     }
 }
