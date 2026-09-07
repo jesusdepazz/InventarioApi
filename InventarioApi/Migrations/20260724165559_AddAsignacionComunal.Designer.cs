@@ -4,6 +4,7 @@ using Inventory.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventarioApi.Migrations
 {
     [DbContext(typeof(InventarioContext))]
-    partial class InventarioContextModelSnapshot : ModelSnapshot
+    [Migration("20260724165559_AddAsignacionComunal")]
+    partial class AddAsignacionComunal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -260,17 +263,11 @@ namespace InventarioApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Correlativo")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("FechaActualizacion")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("FechaAsignacion")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("LoteId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Observaciones")
                         .HasColumnType("nvarchar(max)");
@@ -279,40 +276,9 @@ namespace InventarioApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Version")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("AsignacionesComunales");
-                });
-
-            modelBuilder.Entity("InventarioApi.Models.AsignacionComunalVersion", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AsignacionComunalId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DatosJson")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("FechaGuardado")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("NumeroVersion")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AsignacionComunalId");
-
-                    b.ToTable("AsignacionComunalVersiones");
                 });
 
             modelBuilder.Entity("InventarioApi.Models.BajaActivo", b =>
@@ -1098,17 +1064,6 @@ namespace InventarioApi.Migrations
                         .IsRequired();
 
                     b.Navigation("HojaResponsabilidad");
-                });
-
-            modelBuilder.Entity("InventarioApi.Models.AsignacionComunalVersion", b =>
-                {
-                    b.HasOne("InventarioApi.Models.AsignacionComunal", "AsignacionComunal")
-                        .WithMany()
-                        .HasForeignKey("AsignacionComunalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AsignacionComunal");
                 });
 
             modelBuilder.Entity("InventarioApi.Models.EmpleadoInfo", b =>
